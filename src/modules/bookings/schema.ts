@@ -11,8 +11,16 @@ export const bookingFormSchema = z.object({
     .regex(/^[0-9]{10}$/, "Enter valid 10 digit phone number"),
 
   booking_date: z
-    .string()
+    .coerce.date()
     .min(1, "Booking date is required"),
+
+  start_datetime: z
+    .coerce.date()
+    .optional(),
+
+  end_datetime: z
+    .coerce.date()
+    .optional(),
 
   start_time: z
     .string()
@@ -28,20 +36,17 @@ export const bookingFormSchema = z.object({
     .default(0),
 
   payment_mode: z
-    .enum(["CASH", "UPI"])
+    .enum(["CASH", "UPI", "ONLINE", "OTHER"])
     .optional(),
-
-  collected_by: z
-    .string()
-    .min(1, "Collected by is required"),
 
   notes: z
     .string()
     .optional(),
 })
 .superRefine((data, ctx) => {
-  const start = dayjs(`${data.booking_date} ${data.start_time}`);
-  const end = dayjs(`${data.booking_date} ${data.end_time}`);
+
+  const start = dayjs(`${data.start_datetime}`);
+  const end = dayjs(`${data.end_datetime}`);
 
   // Handle midnight crossover
   const finalEnd =

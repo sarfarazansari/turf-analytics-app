@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
+// const supabase = getSupabase();
 
 type Role = "ADMIN" | "STAFF";
 
@@ -26,7 +27,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       .from("profiles")
       .select("role")
       .eq("id", userId)
-      .single();
+      .single() as { data: { role: Role } | null; error: any };
 
     if (!error && data) {
       setRole(data.role);

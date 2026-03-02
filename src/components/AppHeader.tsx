@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+// const supabase = getSupabase();
 import { useAuth } from "@/context/AuthContext";
 
 export default function AppHeader() {
