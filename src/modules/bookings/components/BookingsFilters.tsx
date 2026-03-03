@@ -28,6 +28,7 @@ import { CalendarIcon, X } from "lucide-react";
 import type { AdminBookingFilters } from "@/interfaces";
 import { bookingsFiltersSchema } from "../bookingsFiltersSchema";
 import { DATE_FORMAT_UI } from "@/constants";
+import { DateRange } from "react-day-picker";
 
 type FormValues = z.infer<typeof bookingsFiltersSchema>;
 
@@ -173,7 +174,7 @@ export function BookingsFilters({
                 {dayjs(dateRange.to).format(DATE_FORMAT_UI)}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="p-0">
+            <PopoverContent  className="w-auto p-0" align="start">
               <Calendar
                 mode="range"
                 selected={dateRange}
@@ -181,6 +182,7 @@ export function BookingsFilters({
                   if (!range?.from) return;
 
                   setActivePreset(null); // manual override
+
                   form.setValue("dateRange", {
                     from: range.from,
                     to: range.to ?? range.from,
