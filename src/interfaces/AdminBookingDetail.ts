@@ -1,23 +1,21 @@
 export interface AdminBookingDetail {
-  id: string;
-
-  customer_name: string;
-  phone: string;
-
-  start_datetime: string;
-  end_datetime: string;
-
-  total_amount: number;
-
-  payments: {
-    id: string;
-    amount: number;
-    payment_mode: 'CASH' | 'UPI' | 'ONLINE' | 'OTHER';
-    created_at: string;
-    created_by: string;
-  }[];
-
+  id: string
+  customer_name: string
+  customer_phone: string
+  start_datetime: string
+  end_datetime: string
   booking_status: 'BOOKED' | 'COMPLETED' | 'CANCELLED';
-  created_at: string;
-  created_by: string;
+  notes: string
+  created_at: string
+  total_amount: number
+  total_paid: number
+  payment_status: 'FULL_PAID' | 'PARTIAL' | 'UNPAID';
+  payments: Payment[]
+}
+
+export interface Payment {
+  id: string
+  amount: number
+  payment_mode: 'CASH' | 'UPI' | 'ONLINE' | 'OTHER';
+  created_at: string
 }

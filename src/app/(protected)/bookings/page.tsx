@@ -19,6 +19,7 @@ import {
   buildSearchParams,
   parseFiltersFromSearchParams,
 } from "@/modules/bookings/utils/bookingFilterParams";
+import { BookingDetailsDrawer } from "@/modules/bookings/components/BookingDetailsDrawer";
 
 export default function BookingsPage() {
   const router = useRouter();
@@ -53,7 +54,6 @@ export default function BookingsPage() {
   const handleFilterChange = (
     updated: AdminBookingFilters
   ) => {
-    console.log("Updated Filters:", updated); // Debug log
     const query = buildSearchParams(updated);
 
     setPage(1); // Always reset page
@@ -64,6 +64,10 @@ export default function BookingsPage() {
   const handleView = (bookingId: string) => {
     setSelectedBookingId(bookingId);
   };
+
+  const handleClose = () => {    
+    setSelectedBookingId(null);  
+  }
 
   return (
     <RoleGuard allowedRoles={["ADMIN"]}>
@@ -94,9 +98,7 @@ export default function BookingsPage() {
 
         {/* Drawer Placeholder */}
         {selectedBookingId && (
-          <div>
-            {/* Future Drawer */}
-          </div>
+          <BookingDetailsDrawer isOpen={!!selectedBookingId} onClose={handleClose} bookingId={selectedBookingId} />
         )}
       </div>
     </RoleGuard>

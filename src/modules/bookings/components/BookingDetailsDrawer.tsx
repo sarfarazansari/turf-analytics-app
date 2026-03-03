@@ -24,6 +24,7 @@ import {
 
 import { useAdminBookingDetail } from "../hooks/useAdminBookingDetail";
 import { useAddPayment } from "../hooks/useAddPayment";
+import toast from "react-hot-toast";
 
 interface Props {
   bookingId: string | null;
@@ -51,8 +52,7 @@ export function BookingDetailsDrawer({
   isOpen,
   onClose,
 }: Props) {
-  const { data, isLoading } =
-    useAdminBookingDetail(bookingId);
+  const { data, isLoading } = useAdminBookingDetail(bookingId);
 
   const addPayment = useAddPayment();
 
@@ -64,21 +64,28 @@ export function BookingDetailsDrawer({
     },
   });
 
-  const onSubmit = (values: FormValues) => {
+  const onSubmit = async (values: FormValues) => {
     if (!bookingId) return;
 
-    addPayment.mutate({
-      bookingId,
-      amount: values.amount,
-      paymentMode: values.paymentMode,
-    });
+    try {
+      await addPayment.mutateAsync({
+        bookingId,
+        amount: values.amount,
+        paymentMode: values.paymentMode,
+      });
 
-    form.reset();
+      form.reset();
+      addPayment.reset();
+      toast.success("Payment added successfully");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to add payment"); 
+    }
   };
-
+  const amount = form.watch("amount");
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="w-[500px] overflow-y-auto">
+      <SheetContent className="w-125 overflow-y-auto">
         <SheetHeader>
           <SheetTitle>Booking Details</SheetTitle>
         </SheetHeader>
@@ -88,13 +95,13 @@ export function BookingDetailsDrawer({
             Loading...
           </div>
         ) : (
-          <div className="space-y-6 mt-6">
+          <div className="space-y-6 p-6">
             {/* Booking Info */}
             <div className="space-y-2">
               <div className="font-semibold">
                 {data.customer_name}
               </div>
-              <div>{data.phone}</div>
+              <div>{data.customer_phone}</div>
 
               <div className="text-sm text-muted-foreground">
                 {dayjs(data.start_datetime).format(
@@ -164,18 +171,19 @@ export function BookingDetailsDrawer({
             </div>
 
             {/* Add Payment */}
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-3"
-            >
-              <h4 className="font-semibold">
+            { (data.payment_status !== 'FULL_PAID') && (
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-3"
+              >
+                <h4 className="font-semibold">
                 Add Payment
               </h4>
 
               <Input
                 type="number"
                 placeholder="Amount"
-                {...form.register("amount")}
+                {...form.register("amount", { valueAsNumber: true })}
               />
 
               <Select
@@ -207,12 +215,18 @@ export function BookingDetailsDrawer({
               </Select>
 
               <Button
+                className="cursor-pointer"
                 type="submit"
-                disabled={addPayment.isPending}
+                disabled={
+                  addPayment.isPending ||
+                  !amount ||
+                  amount <= 10
+                }
               >
                 Add Payment
               </Button>
             </form>
+            )}
           </div>
         )}
       </SheetContent>

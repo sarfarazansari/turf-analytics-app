@@ -73,7 +73,6 @@ export function BookingsFilters({
       return;
     }
     
-    console.log("Form Values Changed:"); // Debug log
     const timeout = setTimeout(() => {
       // const { dateRange } = values;
 
