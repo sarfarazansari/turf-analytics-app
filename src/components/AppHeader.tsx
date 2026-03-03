@@ -67,7 +67,7 @@ export default function AppHeader() {
 
         <button
           onClick={handleLogout}
-          className="px-3 py-1 text-sm bg-black text-white rounded"
+          className="px-3 py-1 text-sm bg-black text-white rounded cursor-pointer" 
         >
           Logout
         </button>

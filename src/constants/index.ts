@@ -1,4 +1,4 @@
-export const DATE_FORMAT_UI = 'YYYY-MM-DD';
+export const DATE_FORMAT_UI = 'DD MMM YYYY';
 export const DT_TIME_FORMAT_UI = 'YYYY-MM-DD HH:mm';
 export const TIME_FORMAT_UI = 'hh:mm A';
 export const DATE_FORMAT_API = 'YYYY-MM-DD';
