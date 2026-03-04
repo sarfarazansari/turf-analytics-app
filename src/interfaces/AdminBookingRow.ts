@@ -12,7 +12,7 @@ export interface AdminBookingRow {
   total_paid: number;
   total_due: number;
 
-  payment_status: 'FULL_PAID' | 'PARTIAL' | 'UNPAID';
+  payment_status: 'FULL_PAID' | 'PARTIAL_PAID' | 'UNPAID';
   booking_status: 'BOOKED' | 'COMPLETED' | 'CANCELLED';
 
   created_by: string;

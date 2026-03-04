@@ -16,7 +16,7 @@ dayjs.extend(isSameOrAfter);
 //   paymentStatus: z.enum([
 //     "ALL",
 //     "FULL_PAID",
-//     "PARTIAL",
+//     "PARTIAL_PAID",
 //     "UNPAID",
 //   ]),
 //   search: z.string(),
@@ -29,7 +29,7 @@ export const bookingsFiltersSchema = z
       to: z.date(),
     }),
     bookingStatus: z.enum(["ALL", "BOOKED", "COMPLETED", "CANCELLED"]),
-    paymentStatus: z.enum(["ALL", "FULL_PAID", "PARTIAL", "UNPAID"]),
+    paymentStatus: z.enum(["ALL", "FULL_PAID", "PARTIAL_PAID", "UNPAID"]),
     search: z.string().optional(),
   })
   .refine(

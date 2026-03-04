@@ -201,7 +201,7 @@ export function BookingsTable({
                       variant={
                         row.payment_status === "FULL_PAID"
                           ? "default"
-                          : row.payment_status === "PARTIAL"
+                          : row.payment_status === "PARTIAL_PAID"
                             ? "secondary"
                             : "destructive"
                       }

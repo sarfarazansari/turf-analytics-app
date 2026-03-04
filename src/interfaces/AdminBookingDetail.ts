@@ -9,7 +9,7 @@ export interface AdminBookingDetail {
   created_at: string
   total_amount: number
   total_paid: number
-  payment_status: 'FULL_PAID' | 'PARTIAL' | 'UNPAID';
+  payment_status: 'FULL_PAID' | 'PARTIAL_PAID' | 'UNPAID';
   payments: Payment[]
 }
 
