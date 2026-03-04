@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
@@ -88,6 +89,9 @@ export function BookingDetailsDrawer({
       <SheetContent className="w-125 overflow-y-auto">
         <SheetHeader>
           <SheetTitle>Booking Details</SheetTitle>
+          <SheetDescription className="sr-only">
+            description goes here
+          </SheetDescription>
         </SheetHeader>
 
         {isLoading || !data ? (

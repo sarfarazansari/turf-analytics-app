@@ -232,7 +232,7 @@ export function BookingsFilters({
             <SelectContent>
               <SelectItem value="ALL">All</SelectItem>
               <SelectItem value="FULL_PAID">Full Paid</SelectItem>
-              <SelectItem value="PARTIAL">Partial</SelectItem>
+              <SelectItem value="PARTIAL_PAID">Partial Paid</SelectItem>
               <SelectItem value="UNPAID">Unpaid</SelectItem>
             </SelectContent>
           </Select>
