@@ -24,6 +24,14 @@ export function DashboardPageComponent() {
     dateRange,
   });
 
+  if (isLoading || isPending) {
+    return <div>Loading dashboard...</div>;
+  }
+
+  if (isError) {
+    return <div>Error loading dashboard data.</div>;
+  }
+
   return (
     <div className="space-y-6">
       <DashboardHeader

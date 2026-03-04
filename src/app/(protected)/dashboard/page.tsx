@@ -1,5 +1,5 @@
 "use client";
-
+export const dynamic = "force-dynamic";
 import RoleGuard from "@/components/RoleGuard";
 import { DashboardPageComponent } from "@/modules/dashboard/pages/DashboardPage";
 
