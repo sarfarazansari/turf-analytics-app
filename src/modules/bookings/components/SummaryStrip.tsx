@@ -4,19 +4,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { motion, animate } from "framer-motion";
 import { useEffect, useState } from "react";
 import type { AdminBookingsSummary } from "@/interfaces";
+import { formatCurrency } from "@/lib/currency-format";
 
 interface SummaryStripProps {
   summary?: AdminBookingsSummary;
   isLoading: boolean;
 }
 
-function formatCurrency(amount: number) {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
 
 function AnimatedNumber({
   value,

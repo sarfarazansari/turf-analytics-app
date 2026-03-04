@@ -25,6 +25,7 @@ import type {
 } from "@/interfaces";
 import { DATE_FORMAT_UI } from "@/constants";
 import { cn } from "@/lib/utils";
+import { formatCurrency } from "@/lib/currency-format";
 
 interface BookingsTableProps {
   data: AdminBookingRow[];
@@ -37,13 +38,6 @@ interface BookingsTableProps {
   onView: (bookingId: string) => void;
 }
 
-function formatCurrency(amount: number) {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
 const CELL_COUNT = 9; // Update this if you add/remove columns
 
 export function BookingsTable({

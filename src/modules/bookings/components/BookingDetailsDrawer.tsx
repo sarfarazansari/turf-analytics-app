@@ -26,6 +26,7 @@ import {
 import { useAdminBookingDetail } from "../hooks/useAdminBookingDetail";
 import { useAddPayment } from "../hooks/useAddPayment";
 import toast from "react-hot-toast";
+import { formatCurrency } from "@/lib/currency-format";
 
 interface Props {
   bookingId: string | null;
@@ -40,13 +41,6 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-function formatCurrency(amount: number) {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
 
 export function BookingDetailsDrawer({
   bookingId,
