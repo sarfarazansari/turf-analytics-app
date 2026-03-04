@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
+const supabase = getSupabase();
 import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {

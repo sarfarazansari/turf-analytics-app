@@ -2,8 +2,8 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { Session, User } from "@supabase/supabase-js";
-import { supabase } from "@/lib/supabase";
-// const supabase = getSupabase();
+import { getSupabase } from "@/lib/supabase";
+const supabase = getSupabase();
 
 type Role = "ADMIN" | "STAFF";
 
@@ -23,37 +23,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   const fetchProfile = async (userId: string) => {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("profiles")
       .select("role")
       .eq("id", userId)
-      .single() as { data: { role: Role } | null; error: any };
+      .single();
 
-    if (!error && data) {
-      setRole(data.role);
+    if (data) {
+      setRole(data.role as Role);
     } else {
       setRole(null);
     }
   };
 
   useEffect(() => {
-    const initialize = async () => {
-      const { data } = await supabase.auth.getSession();
-      const session = data.session;
-
-      setSession(session);
-      setUser(session?.user ?? null);
-
-      if (session?.user) {
-        await fetchProfile(session.user.id);
-      }
-
-      setLoading(false);
-    };
-
-    initialize();
-
-    const { data: listener } = supabase.auth.onAuthStateChange(
+    const { data: authListener } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
@@ -63,11 +47,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         } else {
           setRole(null);
         }
+
+        setLoading(false);
       }
     );
 
     return () => {
-      listener.subscription.unsubscribe();
+      authListener.subscription.unsubscribe();
     };
   }, []);
 

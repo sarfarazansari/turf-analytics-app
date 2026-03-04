@@ -27,7 +27,8 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { useCreateBooking } from "../hooks/create-booking"
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
+const supabase = getSupabase();
 // const supabase = getSupabase();
 
 export default function CreateBookingForm() {

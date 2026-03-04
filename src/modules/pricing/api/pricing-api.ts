@@ -1,7 +1,8 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query"
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
+const supabase = getSupabase();
 // const supabase = getSupabase();
 
 export interface PricingSlab {

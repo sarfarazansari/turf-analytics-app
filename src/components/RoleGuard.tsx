@@ -13,18 +13,27 @@ export default function RoleGuard({
   children: React.ReactNode;
   allowedRoles: Role[];
 }) {
-  const { role, loading } = useAuth();
+  const { role, loading, user } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
+    if (!loading && !user) {
+      router.replace("/login");
+      return;
+    }
+
     if (!loading && role && !allowedRoles.includes(role)) {
       router.replace("/dashboard");
     }
-  }, [role, loading, allowedRoles, router]);
+  }, [loading, user, role, allowedRoles, router]);
 
-  if (loading || !role) return null;
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-  if (!allowedRoles.includes(role)) return null;
+  if (!user) return null;
+
+  if (role && !allowedRoles.includes(role)) return null;
 
   return <>{children}</>;
 }

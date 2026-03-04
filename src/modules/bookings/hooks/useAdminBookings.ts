@@ -1,7 +1,8 @@
 "use client";
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
+const supabase = getSupabase();
 import type {
   AdminBookingFilters,
   AdminBookingsResponse,

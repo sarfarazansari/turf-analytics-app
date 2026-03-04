@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
+const supabase = getSupabase();
 // const supabase = getSupabase();
 import { useAuth } from "@/context/AuthContext";
 

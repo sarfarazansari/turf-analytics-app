@@ -12,7 +12,7 @@ import type { DateRange } from "../types";
 import dayjs from "dayjs"
 
 
-
+export const revalidate = 0;
 export function DashboardPageComponent() {
 
   const [dateRange, setDateRange] = useState<DateRange | null>({

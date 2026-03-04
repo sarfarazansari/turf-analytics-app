@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
+const supabase = getSupabase();
 import { withTimeout } from "@/lib/withTimeout";
 import toast from "react-hot-toast";
 import type { PostgrestSingleResponse } from "@supabase/supabase-js";

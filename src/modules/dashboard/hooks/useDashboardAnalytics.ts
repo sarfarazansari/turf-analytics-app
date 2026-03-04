@@ -6,7 +6,8 @@ import type {
   DateRange,
 } from "../types";
 import { normalizeHourlyData } from "../utils/normalizeHourlyData";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
+const supabase = getSupabase();
 import dayjs from "dayjs";
 
 interface UseDashboardAnalyticsProps {
