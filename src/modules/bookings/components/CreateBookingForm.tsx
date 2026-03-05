@@ -16,7 +16,6 @@ import { format } from "date-fns"
 import { DATE_FORMAT_CALENDAR } from "@/constants"
 import dayjs from "dayjs"
 import { useAuth } from "@/context/AuthContext"
-import { usePricingSlabs } from "@/modules/pricing/api/pricing-api"
 import { calculateBookingTotal } from "@/lib/calculate-price"
 import {
   Form,
@@ -27,9 +26,8 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { useCreateBooking } from "../hooks/create-booking"
-import { getSupabase } from "@/lib/supabase";
-const supabase = getSupabase();
-// const supabase = getSupabase();
+import { usePricingSlabs } from "../hooks/usePricingSlabs"
+import { supabase } from "@/lib/supabase"
 
 export default function CreateBookingForm() {
   const createBooking = useCreateBooking()
@@ -103,6 +101,50 @@ export default function CreateBookingForm() {
      MUTATION
   ========================== */
 
+  useEffect(() => {
+    const handler = () => {
+      if (document.visibilityState === "visible") {
+        supabase.auth.getSession();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handler);
+
+    return () =>
+      document.removeEventListener("visibilitychange", handler);
+  }, []);
+
+  const test = async () => {
+    console.log("TEST START");
+
+    const session = await supabase.auth.getSession();
+    console.log("SESSION", session);
+
+    const { data, error } = await supabase
+      .from("pricing_slabs")
+      .select("*");
+
+    console.log("RESULT", data, error);
+  };
+
+  // const test = async () => {
+  //   console.log("TEST START");
+
+  //   const res = await fetch(
+  //     `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/pricing_slabs`,
+  //     {
+  //       headers: {
+  //         apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  //         Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!}`,
+  //       },
+  //     }
+  //   );
+
+  //   const data = await res.json();
+
+  //   console.log(data);
+  // };
+
   function onSubmit(values: any) {
     if (!values.start_datetime || !values.end_datetime) {
       toast.error("Invalid time selection")
@@ -119,27 +161,24 @@ export default function CreateBookingForm() {
       p_notes: values.notes || null,
       p_created_by: user?.id,
     }
-    createBooking.mutate(payload)
+    createBooking.mutate(payload, {
+      onError: (error: any) => {
+        console.error("Error creating booking:", error);
+        toast.error(
+          error?.message || "Server not responding. Please try again."
+        );
+        // Reset form to allow user to try again
+        createBooking.reset();
+      },
+      onSuccess: () => {
+        toast.success("Booking created successfully!");
+        createBooking.reset();
+        form.reset(defaultValues);
+        setSuccessState(true)
+        setTimeout(() => setSuccessState(false), 3000)
+      }
+    })
   }
-
-  useEffect(() => {
-    if (createBooking.isError) {
-      console.error("Error creating booking:", createBooking.error);
-      // Reset form to allow user to try again
-      createBooking.reset();
-    }
-  }, [createBooking.isError])
-
-  useEffect(() => {
-    if (createBooking.isSuccess) {
-      createBooking.reset();
-      form.reset(defaultValues);
-      toast.success("Booking created successfully!")
-      setSuccessState(true)
-      setTimeout(() => setSuccessState(false), 3000)
-    }
-  }, [createBooking.isSuccess]);
-  
 
   /* =========================
      UI
@@ -299,12 +338,15 @@ export default function CreateBookingForm() {
               />
               <Button
                 type="submit"
-                disabled={isSubmitting || createBooking.isPending}            
+                disabled={isSubmitting || createBooking.isPending}
                 className="w-full"
               >
                 {createBooking.isPending ? "Creating..." : "Create Booking"}
               </Button>
 
+              <Button type="button" variant="outline" onClick={test} className="w-full">
+                Test Supabase
+              </Button>
             </form>
           </Form>
         </CardContent>

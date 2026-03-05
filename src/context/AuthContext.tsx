@@ -2,8 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { Session, User } from "@supabase/supabase-js";
-import { getSupabase } from "@/lib/supabase";
-const supabase = getSupabase();
+import { supabase } from "@/lib/supabase";
 
 type Role = "ADMIN" | "STAFF";
 
@@ -23,39 +22,52 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   const fetchProfile = async (userId: string) => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("profiles")
       .select("role")
       .eq("id", userId)
-      .single();
+      .maybeSingle();
 
-    if (data) {
-      setRole(data.role as Role);
-    } else {
+    if (error) {
+      console.error("Profile fetch error:", error.message);
       setRole(null);
+      return;
     }
+
+    setRole(data?.role ?? null);
   };
 
   useEffect(() => {
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
+    const init = async () => {
+      const { data } = await supabase.auth.getSession();
+
+      setSession(data.session);
+      setUser(data.session?.user ?? null);
+      setLoading(false);
+    };
+
+    init();
+
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-
-        if (session?.user) {
-          await fetchProfile(session.user.id);
-        } else {
-          setRole(null);
-        }
-
-        setLoading(false);
       }
     );
 
     return () => {
-      authListener.subscription.unsubscribe();
+      listener.subscription.unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    if (!user) {
+      setRole(null);
+      return;
+    }
+
+    fetchProfile(user.id);
+  }, [user]);
 
   return (
     <AuthContext.Provider value={{ user, session, role, loading }}>

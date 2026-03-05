@@ -1,58 +1,13 @@
-import { createBrowserClient } from "@supabase/ssr";
-import type { SupabaseClient } from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error("Supabase environment variables missing");
-}
-
-// export const supabase = createBrowserClient(supabaseUrl, supabaseKey);
-
-let supabase: SupabaseClient | undefined;
-
-export function getSupabase() {
-  if (!supabase) {
-    supabase = createBrowserClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
+export const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: false,
+      detectSessionInUrl: false,
+    },
   }
-
-  return supabase;
-}
-
-
-
-// import { createClient } from '@supabase/supabase-js'
-
-// const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-// const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-
-// export const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
-// import { createClient } from "@supabase/supabase-js";
-
-// export const supabase = createClient(
-//   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-//   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-//   {
-//     global: {
-//       fetch: (...args) => fetch(...args),
-//     },
-//   }
-// );
-
-// let supabaseInstance: ReturnType<typeof createClient>;
-
-// export function getSupabase() {
-//   if (!supabaseInstance) {
-//     supabaseInstance = createClient(
-//       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-//       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-//     );
-//   }
-//   return supabaseInstance;
-// }
-
+);

@@ -1,5 +1,5 @@
+import { PricingSlab } from "@/interfaces/PricingSlab"
 import dayjs from "dayjs"
-import { PricingSlab } from "@/modules/pricing/api/pricing-api"
 
 export function calculateBookingTotal(
   start: dayjs.Dayjs,

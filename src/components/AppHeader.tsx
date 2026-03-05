@@ -2,13 +2,11 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { getSupabase } from "@/lib/supabase";
-const supabase = getSupabase();
-// const supabase = getSupabase();
 import { useAuth } from "@/context/AuthContext";
+import { supabase } from "@/lib/supabase";
 
 export default function AppHeader() {
-  const { user, role } = useAuth();
+  const { user, role, loading } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -18,6 +16,8 @@ export default function AppHeader() {
   };
 
   const isActive = (path: string) => pathname.startsWith(path);
+
+  if (loading) return null;
 
   return (
     <header className="flex items-center justify-between px-6 py-4 border-b">
