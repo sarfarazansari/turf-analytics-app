@@ -256,10 +256,10 @@ export default function CreateBookingForm() {
                   control={form.control}
                   name="payment_mode"
                   render={({ field }) => (
-                    <FormItem className="w-100">
+                    <FormItem className="">
                       <FormLabel>Payment Mode</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl className="w-100">
+                        <FormControl className="">
                           <SelectTrigger><SelectValue placeholder="Select Mode" /></SelectTrigger>
                         </FormControl>
                         <SelectContent>

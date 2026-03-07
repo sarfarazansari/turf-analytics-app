@@ -48,7 +48,7 @@ export function PaymentModeChart({ data, isLoading }: PaymentModeChartProps) {
       </CardHeader>
 
       <CardContent className="h-80">
-        <ResponsiveContainer width="100%" height={300} aspect={3}>
+        <ResponsiveContainer width="100%" height="100%" aspect={3}>
           <PieChart>
     <Pie
       data={chartData}
