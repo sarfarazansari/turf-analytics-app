@@ -9,6 +9,7 @@ export interface DashboardSummary {
   totalHoursBooked: number;
   occupancyRate: number;
   cancellationCount: number;
+  avgBookingValue: number;
 }
 
 export interface RevenueTrendItem {
