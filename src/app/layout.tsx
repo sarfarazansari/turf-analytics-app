@@ -3,10 +3,18 @@ import { Providers } from "./providers";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
+import type { Viewport } from 'next'
+ 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+}
+
 export const metadata: Metadata = {
   title: "Turf Analytics",
   description: "Turf Operations Analytics System",
-  viewport: "width=device-width, initial-scale=1",
 };
 
 export default function RootLayout({

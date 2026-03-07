@@ -28,6 +28,7 @@ import {
 import { useCreateBooking } from "../hooks/create-booking"
 import { usePricingSlabs } from "../hooks/usePricingSlabs"
 import { supabase } from "@/lib/supabase"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 export default function CreateBookingForm() {
   const createBooking = useCreateBooking()
@@ -227,28 +228,64 @@ export default function CreateBookingForm() {
                 />
 
                 <FormField
-                  control={form.control}
-                  name="start_time"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Start</FormLabel>
-                      <FormControl><Input type="time" {...field} step="60" /></FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+  control={form.control}
+  name="start_time"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Start Time</FormLabel>
+
+      <Select onValueChange={field.onChange} value={field.value}>
+        <FormControl>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select start time" />
+          </SelectTrigger>
+        </FormControl>
+
+        <SelectContent>
+          <ScrollArea className="h-60">
+          {Array.from({ length: 24 }, (_, i) => (
+            <SelectItem key={i} value={`${i.toString().padStart(2, "0")}:00`}>
+              {dayjs().hour(i).minute(0).format("hh:mm A")}
+            </SelectItem>
+          ))}
+          </ScrollArea>
+        </SelectContent>
+      </Select>
+
+      <FormMessage />
+    </FormItem>
+  )}
+/>
 
                 <FormField
-                  control={form.control}
-                  name="end_time"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>End</FormLabel>
-                      <FormControl><Input type="time" {...field} step="60" /></FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+  control={form.control}
+  name="end_time"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>End Time</FormLabel>
+
+      <Select onValueChange={field.onChange} value={field.value} >
+        <FormControl>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select end time" />
+          </SelectTrigger>
+        </FormControl>
+
+        <SelectContent>
+          <ScrollArea className="h-60">
+          {Array.from({ length: 24 }, (_, i) => (
+            <SelectItem key={i} value={`${i.toString().padStart(2, "0")}:00`}>
+              {dayjs().hour(i).minute(0).format("hh:mm A")}
+            </SelectItem>
+          ))}
+          </ScrollArea>
+        </SelectContent>
+      </Select>
+
+      <FormMessage />
+    </FormItem>
+  )}
+/>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -256,11 +293,11 @@ export default function CreateBookingForm() {
                   control={form.control}
                   name="payment_mode"
                   render={({ field }) => (
-                    <FormItem className="">
+                    <FormItem>
                       <FormLabel>Payment Mode</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl className="">
-                          <SelectTrigger><SelectValue placeholder="Select Mode" /></SelectTrigger>
+                        <FormControl>
+                          <SelectTrigger className="w-full"><SelectValue placeholder="Select Mode" /></SelectTrigger>
                         </FormControl>
                         <SelectContent>
                           <SelectItem value="CASH">Cash</SelectItem>
