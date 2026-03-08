@@ -20,8 +20,11 @@ export async function createBookingPayment(payload: AddPaymentInput) {
   
 
   const { data, error } = await supabase.rpc(
-    "add_booking_payment",
-    payload
+    "add_booking_payment", {
+      p_amount: payload.amount,
+      p_booking_id: payload.bookingId,
+      p_payment_mode: payload.paymentMode
+    }
   );
 
   if (error) {
