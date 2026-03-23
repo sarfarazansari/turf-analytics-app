@@ -10,6 +10,7 @@ import { PaymentModeChart } from "../components/PaymentModeChart";
 import { useDashboardAnalytics } from "../hooks/useDashboardAnalytics";
 import type { DateRange } from "../types";
 import dayjs from "dayjs"
+import { RevenueTrendChart } from "../components/RevenueTrendChart";
 
 
 export const revalidate = 0;
@@ -42,7 +43,7 @@ export function DashboardPageComponent() {
       <SummaryCards summary={data?.summary} isLoading={isLoading} />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <RevenueChart data={data?.revenueTrend} isLoading={isLoading} />
+        <RevenueTrendChart data={data?.revenueTrendNew} />
         <BookingTrendChart data={data?.bookingTrend} isLoading={isLoading} />
       </div>
 

@@ -32,10 +32,24 @@ export interface PaymentModeItem {
   count: number;
 }
 
+export interface RevenueTrendChartData {
+  labels: string[]
+  datasets: RevenueTrendChartDataset[]
+}
+
+export interface RevenueTrendChartDataset {
+  label: string
+  data: number[]
+}
+
+
 export interface DashboardAnalytics {
   summary: DashboardSummary;
   revenueTrend: RevenueTrendItem[];
+  revenueTrendNew: RevenueTrendChartData;
   bookingTrend: BookingTrendItem[];
   hourlyPerformance: HourlyPerformanceItem[];
   paymentModes: PaymentModeItem[];
 }
+
+// { labels: string[]; datasets: [{ label: string; data: number[] }[]] };
