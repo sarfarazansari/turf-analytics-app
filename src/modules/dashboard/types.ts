@@ -52,4 +52,42 @@ export interface DashboardAnalytics {
   paymentModes: PaymentModeItem[];
 }
 
+export interface KPIsData {
+  current_bookings: number
+  previous_bookings: number
+  current_revenue: number
+  previous_revenue: number
+  current_booked_hours: number
+  previous_booked_hours: number
+  paid: number
+  pending: number
+  total_hours_current: number
+  total_hours_previous: number
+}
+
+export type DashboardView = "WEEKLY" | "MONTHLY" | "CUSTOM";
 // { labels: string[]; datasets: [{ label: string; data: number[] }[]] };
+
+type KPIItem = {
+  current: number;
+  previous: number;
+  changePercent: number;
+};
+
+export interface PaymentHealth {
+  paid: number
+  pending: number
+}
+
+export interface KPIsResponse {
+  summary: Summary
+}
+
+export interface Summary {
+  revenue: KPIItem
+  bookings: KPIItem
+  utilization: KPIItem
+  avgBookingValue: KPIItem
+  paymentHealth: PaymentHealth
+}
+
