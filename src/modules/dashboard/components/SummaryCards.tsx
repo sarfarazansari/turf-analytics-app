@@ -1,7 +1,7 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { KPIsResponse, Summary } from "../types";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import type { Summary } from "../types";
 import { SummaryCardsSkeleton } from "./SummaryCardsSkeleton";
 import { formatCurrency } from "@/lib/currency-format";
 import { formatNumber, formatPercentage } from "@/lib/number-format";
@@ -55,13 +55,14 @@ export function SummaryCards({
         const isPositive = card.change >= 0;
 
         return (
-          <div
+          <Card
             key={card.label}
-            className="rounded-xl border p-4 shadow-sm bg-white"
           >
-            <p className="text-sm text-gray-500">{card.label}</p>
+            <CardHeader>
+              <CardTitle>{card.label}</CardTitle>
+            </CardHeader>
 
-            <div className="mt-2 flex items-end justify-between">
+            <CardContent className="mt-2 flex items-end justify-between">
               <h2 className="text-xl font-semibold">{card.value}</h2>
 
               <span
@@ -71,22 +72,24 @@ export function SummaryCards({
               >
                 {isPositive ? "↑" : "↓"} {formatPercentage(card.change)}
               </span>
-            </div>
+            </CardContent>
 
-            <p className="mt-1 text-xs text-gray-400">
+            <CardFooter className="mt-1 text-xs text-gray-400">
               Prev: {card.previous}
-            </p>
-          </div>
+            </CardFooter>
+          </Card>
         );
       })}
-      <div className="rounded-xl border p-4 shadow-sm bg-white">
-        <p className="text-sm text-gray-500">Payment Health</p>
+      <Card>
+        <CardHeader>
+          <CardTitle>Payment Health</CardTitle>
+        </CardHeader>
 
-        <div className="mt-2 flex justify-between text-sm">
+        <CardContent className="mt-2 flex justify-between text-sm">
           <span>Paid: ₹{summary.paymentHealth.paid}</span>
           <span>Pending: ₹{summary.paymentHealth.pending}</span>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
       {/* <Card>
         <CardHeader>
           <CardTitle>Total Revenue</CardTitle>
