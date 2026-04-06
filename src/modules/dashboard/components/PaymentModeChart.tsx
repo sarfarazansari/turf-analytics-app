@@ -5,9 +5,6 @@ import {
   Pie,
   Tooltip,
   ResponsiveContainer,
-  Cell,
-  PieSectorShapeProps,
-  Sector,
 } from "recharts"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"

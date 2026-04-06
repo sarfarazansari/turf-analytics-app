@@ -20,16 +20,6 @@ interface BookingTrendChartProps {
 
 export function BookingTrendChart({ data, isLoading }: BookingTrendChartProps) {
 
-  // const data = [
-  //   { date: "Mon", bookings: 0 },
-  //   { date: "Tue", bookings: 0 },
-  //   { date: "Wed", bookings: 0 },
-  //   { date: "Thu", bookings: 0 },
-  //   { date: "Fri", bookings: 0 },
-  //   { date: "Sat", bookings: 0 },
-  //   { date: "Sun", bookings: 0 },
-  // ]
-
   return (
     <Card>
       <CardHeader>

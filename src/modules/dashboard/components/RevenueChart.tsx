@@ -7,13 +7,11 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-  CartesianGrid,
 } from "recharts"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartSkeleton } from "./ChartSkeleton";
 import { formatCurrency } from "@/lib/currency-format";
-import { formatNumber, formatPercentage } from "@/lib/number-format";
 
 interface RevenueChartProps {
   data?: {
@@ -24,16 +22,6 @@ interface RevenueChartProps {
 }
 
 export function RevenueChart({ data, isLoading }: RevenueChartProps) {
-
-  // const data = [
-  //   { date: "Mon", revenue: 0 },
-  //   { date: "Tue", revenue: 0 },
-  //   { date: "Wed", revenue: 0 },
-  //   { date: "Thu", revenue: 0 },
-  //   { date: "Fri", revenue: 0 },
-  //   { date: "Sat", revenue: 0 },
-  //   { date: "Sun", revenue: 0 },
-  // ]
 
   if (isLoading) {
     return <ChartSkeleton />
