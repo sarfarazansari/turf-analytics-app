@@ -74,7 +74,7 @@ export function SummaryCards({
               </span>
             </CardContent>
 
-            <CardFooter className="mt-1 text-xs text-gray-400">
+            <CardFooter className="mt-1">
               Prev: {card.previous}
             </CardFooter>
           </Card>
@@ -86,9 +86,11 @@ export function SummaryCards({
         </CardHeader>
 
         <CardContent className="mt-2 flex justify-between text-sm">
-          <span>Paid: ₹{summary.paymentHealth.paid}</span>
-          <span>Pending: ₹{summary.paymentHealth.pending}</span>
+          <h2 className="text-xl font-semibold">Paid: ₹{summary.paymentHealth.paid}</h2>
         </CardContent>
+        <CardFooter className="mt-1">
+        <span className="text-sm font-medium text-red-600">Pending: ₹{summary.paymentHealth.pending}</span>
+        </CardFooter>
       </Card>
       {/* <Card>
         <CardHeader>

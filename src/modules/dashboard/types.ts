@@ -91,3 +91,26 @@ export interface Summary {
   paymentHealth: PaymentHealth
 }
 
+export interface TrendApiItem {
+  date: string
+  revenue: number
+  bookings: number
+}
+
+export interface TrendDataApiResponse {
+  current: TrendApiItem[]
+  previous: TrendApiItem[]
+}
+
+export interface TrendItem {
+  current: number[]
+  previous: number[]
+}
+
+export interface TrendMappedData {
+  labels: string[]
+  revenue: TrendItem
+  bookings: TrendItem
+}
+
+

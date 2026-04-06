@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase";
-import { DashboardAnalytics, DashboardView, DateRange, KPIsData, KPIsResponse } from "@/modules/dashboard/types";
+import { DashboardAnalytics, DashboardView, DateRange, KPIsData, KPIsResponse, TrendMappedData } from "@/modules/dashboard/types";
+import { mapTrendData } from "@/modules/dashboard/utils/analyticsMapper";
 import dayjs from "dayjs";
 
 
@@ -119,8 +120,8 @@ function getDateRanges(
     const start = today.startOf("month");
     const end = today;
 
-    const prevStart = start.subtract(1, "month");
-    const prevEnd = prevStart.add(end.date() - 1, "day");
+    const prevStart = today.subtract(1, "month").startOf("month");
+    const prevEnd = today.subtract(1, "month").endOf("month");
 
     return {
       current: {
@@ -178,9 +179,6 @@ export async function getKPIAnalytics({
   dateRange,
 }: UseDashboardAnalyticsProps) {
   const ranges = getDateRanges(view, dateRange);
-
-  // console.log("Calculated date ranges for analytics:", ranges);
-
   const { data, error } = await supabase.rpc("get_kpis", {
     start_date: ranges.current.from,
     end_date: ranges.current.to,
@@ -193,4 +191,26 @@ export async function getKPIAnalytics({
   }
 
   return mapKpiData(data) as KPIsResponse;
+}
+
+
+export async function fetchTrendAnalytics({
+  startDate,
+  endDate,
+  view,
+}: {
+  startDate: string;
+  endDate: string;
+  view: DashboardView;
+}) {
+  const { data, error } = await supabase.rpc("get_trend_analytics", {
+    start_date: startDate,
+    end_date: endDate,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return mapTrendData(data, view) as TrendMappedData;
 }

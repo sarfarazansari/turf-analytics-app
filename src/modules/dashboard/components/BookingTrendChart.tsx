@@ -1,24 +1,56 @@
-"use client"
+"use client";
 
 import {
   LineChart,
   Line,
   XAxis,
   YAxis,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts"
+  CartesianGrid,
+} from "recharts";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import type { BookingTrendItem, DateRange } from "../types"
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+} from "@/components/ui/chart";
 
-interface BookingTrendChartProps {
-  // dateRange: DateRange | null
-  data?: BookingTrendItem[];
-  isLoading?: boolean;
-}
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export function BookingTrendChart({ data, isLoading }: BookingTrendChartProps) {
+type Props = {
+  labels: string[];
+  current: number[];
+  previous: number[];
+};
+
+export function BookingTrendChart({
+  labels,
+  current,
+  previous,
+}: Props) {
+  // -----------------------------
+  // 1. Build chart data
+  // -----------------------------
+  const chartData = labels.map((label, i) => ({
+    label,
+    current: current[i],
+    previous: previous[i],
+  }));
+
+  // -----------------------------
+  // 2. Config
+  // -----------------------------
+  const chartConfig = {
+    current: {
+      label: "Current",
+      color: "#4f46e5",
+    },
+    previous: {
+      label: "Previous",
+      color: "#a5b4fc",
+    },
+  };
 
   return (
     <Card>
@@ -26,16 +58,49 @@ export function BookingTrendChart({ data, isLoading }: BookingTrendChartProps) {
         <CardTitle>Booking Trend</CardTitle>
       </CardHeader>
 
-      <CardContent className="h-80">
-        <ResponsiveContainer width="100%" height="100%" aspect={3}>
-          <LineChart data={data ?? []} >
-            <XAxis dataKey="date" />
+      <CardContent className="h-80 w-full">
+        <ChartContainer config={chartConfig} className="h-80 w-full">
+          <LineChart data={chartData}>
+            <CartesianGrid vertical={false} />
+
+            <XAxis
+              dataKey="label"
+              tickLine={false}
+              axisLine={false}
+            />
+
             <YAxis />
-            <Tooltip />
-            <Line type="monotone" dataKey="bookings" stroke="#8884d8"/>
+
+            <ChartTooltip
+              content={
+                <ChartTooltipContent
+                  formatter={(value) =>
+                    `${value as number} bookings`
+                  }
+                />
+              }
+            />
+
+            <ChartLegend content={<ChartLegendContent />} />
+
+            <Line
+              type="monotone"
+              dataKey="current"
+              stroke="var(--color-current)"
+              strokeWidth={2}
+              dot={false}
+            />
+
+            <Line
+              type="monotone"
+              dataKey="previous"
+              stroke="var(--color-previous)"
+              strokeWidth={2}
+              dot={false}
+            />
           </LineChart>
-        </ResponsiveContainer>
+        </ChartContainer>
       </CardContent>
     </Card>
-  )
+  );
 }
