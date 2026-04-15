@@ -214,3 +214,27 @@ export async function fetchTrendAnalytics({
 
   return mapTrendData(data, view) as TrendMappedData;
 }
+
+
+export async function getWeekdayWeekendStats({
+  startDate,
+  endDate,
+}: {
+  startDate: string;
+  endDate: string;
+}) {
+  const { data, error } = await supabase.rpc("get_weekday_weekend_stats", {
+    start_date: startDate,
+    end_date: endDate,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data ?? {
+    weekday: { revenue: 0, bookings: 0, minutes: 0 },
+    weekend: { revenue: 0, bookings: 0, minutes: 0 },
+  };
+
+}

@@ -127,3 +127,14 @@ export interface HourlyDemandItem {
   utilization: number
   level: "PEAK" | "NORMAL" | "DEAD"
 }
+
+export interface WeekStatItem {
+  revenue: number
+  bookings: number
+  minutes: number
+}
+
+export interface GetWeekdayWeekendStats {
+  weekday: WeekStatItem
+  weekend: WeekStatItem
+}

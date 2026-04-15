@@ -13,6 +13,8 @@ import { useTrendAnalytics } from "../hooks/useTrendAnalytics";
 import { HourlyPerformanceChart } from "../components/HourlyPerformanceChart"
 import { useHourlyDemand } from "../hooks/useHourlyDemand"
 import { transformHourlyDemand } from "../utils/hourlyTransform"
+import { useWeekdayWeekendStats } from "../hooks/useWeekdayWeekendStats";
+import { WeekdayWeekendComparison } from "../components/WeekdayWeekendComparison";
 
 export const revalidate = 0;
 
@@ -86,8 +88,21 @@ export function DashboardPageComponent() {
 
   const hourlyData: HourlyDemandItem[] = hourlyRaw ? transformHourlyDemand(hourlyRaw, startDate, endDate) : []
 
-  const isLoading = kpiLoading || trendLoading || hourlyLoading
-  const isError = kpiError || trendError || hourlyError
+  // -----------------------------
+  // 3. weekday vs weekend (new)
+  // -----------------------------
+
+  const {
+    data: weekdayWeekendData,
+    isLoading: weekdayWeekendLoading,
+    isError: weekdayWeekendError,
+  } = useWeekdayWeekendStats({
+    startDate,
+    endDate,
+  });
+
+  const isLoading = kpiLoading || trendLoading || hourlyLoading || weekdayWeekendLoading
+  const isError = kpiError || trendError || hourlyError || weekdayWeekendError
   
 
   if (isLoading || isPending) {
@@ -136,6 +151,10 @@ export function DashboardPageComponent() {
         <HourlyPerformanceChart data={hourlyData} />
       )}
 
+      {/* Weekday vs Weekend */}
+      {weekdayWeekendData && (
+        <WeekdayWeekendComparison data={weekdayWeekendData} />
+      )}
       
     </div>
   );
