@@ -5,12 +5,14 @@ import { DashboardHeader } from "../components/DashboardHeader";
 import { SummaryCards } from "../components/SummaryCards";
 import { RevenueTrendChart } from "../components/RevenueTrendChart";
 import { BookingTrendChart } from "../components/BookingTrendChart";
-import { HourlyPerformanceChart } from "../components/HourlyPerformanceChart";
+import dayjs from "dayjs";
 import { PaymentModeChart } from "../components/PaymentModeChart";
 import { useKpiAnalytics } from "../hooks/useKpiAnalytics";
-import type { DateRange } from "../types";
-import dayjs from "dayjs";
+import type { DateRange, HourlyDemandItem } from "../types";
 import { useTrendAnalytics } from "../hooks/useTrendAnalytics";
+import { HourlyPerformanceChart } from "../components/HourlyPerformanceChart"
+import { useHourlyDemand } from "../hooks/useHourlyDemand"
+import { transformHourlyDemand } from "../utils/hourlyTransform"
 
 export const revalidate = 0;
 
@@ -69,8 +71,23 @@ export function DashboardPageComponent() {
     view,
   });
 
-  const isLoading = kpiLoading || trendLoading;
-  const isError = kpiError || trendError;
+  // -----------------------------
+  // 3. Hourly Demand (new)
+  // -----------------------------
+
+  const {
+    data: hourlyRaw,
+    isLoading: hourlyLoading,
+    isError: hourlyError,
+  } = useHourlyDemand({
+    startDate,
+    endDate,
+  })
+
+  const hourlyData: HourlyDemandItem[] = hourlyRaw ? transformHourlyDemand(hourlyRaw, startDate, endDate) : []
+
+  const isLoading = kpiLoading || trendLoading || hourlyLoading
+  const isError = kpiError || trendError || hourlyError
   
 
   if (isLoading || isPending) {
@@ -81,7 +98,7 @@ export function DashboardPageComponent() {
     return <div>Error loading dashboard data.</div>;
   }
 
-  console.log(trendData)
+  console.log(hourlyData)
 
   return (
     <div className="space-y-6">
@@ -114,17 +131,12 @@ export function DashboardPageComponent() {
         </div>
       )}
 
-      {/* If you want, I’ll fix RevenueChart + BookingTrendChart properly — right now I guarantee they’re not aligned with your new system. */}
-{/*
-      
+      {/* Hourly Demand */}
+      {hourlyData && hourlyData.length > 0 && (
+        <HourlyPerformanceChart data={hourlyData} />
+      )}
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <HourlyPerformanceChart
-          data={data?.hourlyPerformance}
-          isLoading={isLoading}
-        />
-        <PaymentModeChart data={data?.paymentModes} isLoading={isLoading} />
-      </div> */}
+      
     </div>
   );
 }

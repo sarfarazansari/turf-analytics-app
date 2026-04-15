@@ -43,11 +43,11 @@ export function RevenueTrendChart({
   const chartConfig = {
     current: {
       label: "Current",
-      color: "green",
+      color: "#4f46e5",
     },
     previous: {
       label: "Previous",
-      color: "lightgreen",
+      color: "#a5b4fc",
     },
   };
 

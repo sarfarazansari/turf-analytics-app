@@ -113,4 +113,17 @@ export interface TrendMappedData {
   bookings: TrendItem
 }
 
+export interface HourlyDemandItemAPI {
+  hour: number
+  hour_label: string
+  minutes_booked: number
+}
 
+export interface HourlyDemandItem {
+  // avgMinutes: number
+  hour: number
+  hour_label: string
+  minutes_booked: number
+  utilization: number
+  level: "PEAK" | "NORMAL" | "DEAD"
+}
