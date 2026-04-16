@@ -1,6 +1,7 @@
 "use client";
 
 import dayjs from "dayjs";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -41,14 +42,12 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-
 export function BookingDetailsDrawer({
   bookingId,
   isOpen,
   onClose,
 }: Props) {
   const { data, isLoading } = useAdminBookingDetail(bookingId);
-
   const addPayment = useAddPayment();
 
   const form = useForm<FormValues>({
@@ -59,8 +58,30 @@ export function BookingDetailsDrawer({
     },
   });
 
+  // ✅ Remaining amount calculation
+  const remaining = data
+    ? data.total_amount -
+      data.payments.reduce((sum, p) => sum + p.amount, 0)
+    : 0;
+
+  // ✅ Reset form on drawer open / booking change
+  useEffect(() => {
+    if (!data || !isOpen) return;
+
+    form.reset({
+      amount: remaining > 0 ? remaining : 0,
+      paymentMode: "CASH",
+    });
+  }, [data, isOpen, remaining, form]);
+
   const onSubmit = async (values: FormValues) => {
-    if (!bookingId) return;
+    if (!bookingId || !data) return;
+
+    // ❌ Prevent overpayment
+    if (values.amount > remaining) {
+      toast.error("Amount exceeds remaining");
+      return;
+    }
 
     try {
       await addPayment.mutateAsync({
@@ -69,32 +90,36 @@ export function BookingDetailsDrawer({
         paymentMode: values.paymentMode,
       });
 
+      // ✅ Reset after payment
+      const updatedRemaining = remaining - values.amount;
+
       form.reset({
-        amount: 0,
+        amount: updatedRemaining > 0 ? updatedRemaining : 0,
         paymentMode: "CASH",
       });
+
       addPayment.reset();
       toast.success("Payment added successfully");
     } catch (err) {
       console.error(err);
-      toast.error("Failed to add payment"); 
+      toast.error("Failed to add payment");
     }
   };
+
   const amount = form.watch("amount");
+
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent className="w-125 overflow-y-auto">
         <SheetHeader>
           <SheetTitle>Booking Details</SheetTitle>
           <SheetDescription className="sr-only">
-            description goes here
+            Booking detail drawer
           </SheetDescription>
         </SheetHeader>
 
         {isLoading || !data ? (
-          <div className="py-10 text-center">
-            Loading...
-          </div>
+          <div className="py-10 text-center">Loading...</div>
         ) : (
           <div className="space-y-6 p-6">
             {/* Booking Info */}
@@ -109,9 +134,7 @@ export function BookingDetailsDrawer({
                   "DD MMM YYYY hh:mm A"
                 )}{" "}
                 –{" "}
-                {dayjs(data.end_datetime).format(
-                  "hh:mm A"
-                )}
+                {dayjs(data.end_datetime).format("hh:mm A")}
               </div>
 
               <Badge>{data.booking_status}</Badge>
@@ -137,19 +160,18 @@ export function BookingDetailsDrawer({
                   )}
                 </strong>
               </div>
+
               <div>
                 Remaining:{" "}
                 <strong>
-                  {formatCurrency(data.total_amount - data.payments.reduce((sum, p) => sum + p.amount, 0))}
+                  {formatCurrency(remaining)}
                 </strong>
               </div>
             </div>
 
             {/* Payments List */}
             <div>
-              <h4 className="font-semibold mb-2">
-                Payments
-              </h4>
+              <h4 className="font-semibold mb-2">Payments</h4>
 
               {data.payments.length === 0 ? (
                 <div className="text-sm text-muted-foreground">
@@ -178,61 +200,50 @@ export function BookingDetailsDrawer({
             </div>
 
             {/* Add Payment */}
-            { (data.payment_status !== 'FULL_PAID') && (
+            {data.payment_status !== "FULL_PAID" && (
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-3"
               >
-                <h4 className="font-semibold">
-                Add Payment
-              </h4>
+                <h4 className="font-semibold">Add Payment</h4>
 
-              <Input
-                type="number"
-                placeholder="Amount"
-                {...form.register("amount", { valueAsNumber: true })}
-              />
+                <Input
+                  type="number"
+                  placeholder="Amount"
+                  {...form.register("amount", {
+                    valueAsNumber: true,
+                  })}
+                />
 
-              <Select
-                value={form.watch("paymentMode")}
-                onValueChange={(value) =>
-                  form.setValue(
-                    "paymentMode",
-                    value as any
-                  )
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="CASH">
-                    Cash
-                  </SelectItem>
-                  <SelectItem value="UPI">
-                    UPI
-                  </SelectItem>
-                  <SelectItem value="ONLINE">
-                    Online
-                  </SelectItem>
-                  <SelectItem value="OTHER">
-                    Other
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+                <Select
+                  value={form.watch("paymentMode")}
+                  onValueChange={(value) =>
+                    form.setValue("paymentMode", value as any)
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
 
-              <Button
-                className="cursor-pointer"
-                type="submit"
-                disabled={
-                  addPayment.isPending ||
-                  !amount ||
-                  amount <= 10
-                }
-              >
-                Add Payment
-              </Button>
-            </form>
+                  <SelectContent>
+                    <SelectItem value="CASH">Cash</SelectItem>
+                    <SelectItem value="UPI">UPI</SelectItem>
+                    <SelectItem value="ONLINE">Online</SelectItem>
+                    <SelectItem value="OTHER">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Button
+                  type="submit"
+                  disabled={
+                    addPayment.isPending ||
+                    !amount ||
+                    amount <= 0
+                  }
+                >
+                  Add Payment
+                </Button>
+              </form>
             )}
           </div>
         )}
