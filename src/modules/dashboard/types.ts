@@ -59,8 +59,7 @@ export interface KPIsData {
   previous_revenue: number
   current_booked_hours: number
   previous_booked_hours: number
-  paid: number
-  pending: number
+  payment_health: PaymentHealth
   total_hours_current: number
   total_hours_previous: number
 }
@@ -74,9 +73,27 @@ type KPIItem = {
   changePercent: number;
 };
 
-export interface PaymentHealth {
+export interface Current {
   paid: number
   pending: number
+  total: number
+  efficiency: number
+  fully_paid: number
+  partially_paid: number
+  unpaid: number
+}
+
+export interface Previous {
+  paid: number
+  pending: number
+  total: number
+  efficiency: number
+}
+
+
+export interface PaymentHealth {
+  current: Current
+  previous: Previous
 }
 
 export interface KPIsResponse {

@@ -5,6 +5,7 @@ import type { Summary } from "../types";
 import { SummaryCardsSkeleton } from "./SummaryCardsSkeleton";
 import { formatCurrency } from "@/lib/currency-format";
 import { formatNumber, formatPercentage } from "@/lib/number-format";
+import { PaymentHealth } from "./PaymentHealth";
 
 interface SummaryCardsProps {
   summary: Summary;
@@ -80,62 +81,9 @@ export function SummaryCards({
           </Card>
         );
       })}
-      <Card>
-        <CardHeader>
-          <CardTitle>Payment Health</CardTitle>
-        </CardHeader>
 
-        <CardContent className="mt-2 flex justify-between text-sm">
-          <h2 className="text-xl font-semibold">Paid: ₹{summary.paymentHealth.paid}</h2>
-        </CardContent>
-        <CardFooter className="mt-1">
-        <span className="text-sm font-medium text-red-600">Pending: ₹{summary.paymentHealth.pending}</span>
-        </CardFooter>
-      </Card>
-      {/* <Card>
-        <CardHeader>
-          <CardTitle>Total Revenue</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {formatCurrency(summary?.totalRevenue ?? 0)}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Total Bookings</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {formatNumber(summary?.totalBookings ?? 0)}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Total Hours</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {formatNumber(summary?.totalHoursBooked ?? 0)}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Occupancy</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {formatPercentage(summary?.occupancyRate ?? 0)}
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Cancellations</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {formatNumber(summary?.cancellationCount ?? 0)}
-        </CardContent>
-      </Card> */}
+      <PaymentHealth paymentHealth={summary.paymentHealth}></PaymentHealth>
+      
     </div>
   );
 }

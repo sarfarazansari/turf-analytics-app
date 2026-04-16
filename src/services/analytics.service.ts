@@ -28,8 +28,8 @@ function mapKpiData(raw: KPIsData) {
   const hoursCurrent = raw.total_hours_current ?? 0;
   const hoursPrevious = raw.total_hours_previous ?? 0;
 
-  const paid = raw.paid ?? 0;
-  const pending = raw.pending ?? 0;
+  // const paid = raw.paid ?? 0;
+  // const pending = raw.pending ?? 0;
 
   const avgBookingValueCurrent =
     bookingsCurrent > 0 ? revenueCurrent / bookingsCurrent : 0;
@@ -81,10 +81,7 @@ function mapKpiData(raw: KPIsData) {
         ),
       },
 
-      paymentHealth: {
-        paid,
-        pending,
-      },
+      paymentHealth: raw.payment_health,
     },
   };
 }
