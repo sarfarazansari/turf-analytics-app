@@ -69,7 +69,10 @@ export function BookingDetailsDrawer({
         paymentMode: values.paymentMode,
       });
 
-      form.reset();
+      form.reset({
+        amount: 0,
+        paymentMode: "CASH",
+      });
       addPayment.reset();
       toast.success("Payment added successfully");
     } catch (err) {
@@ -134,6 +137,12 @@ export function BookingDetailsDrawer({
                   )}
                 </strong>
               </div>
+              <div>
+                Remaining:{" "}
+                <strong>
+                  {formatCurrency(data.total_amount - data.payments.reduce((sum, p) => sum + p.amount, 0))}
+                </strong>
+              </div>
             </div>
 
             {/* Payments List */}
@@ -185,7 +194,7 @@ export function BookingDetailsDrawer({
               />
 
               <Select
-                defaultValue="CASH"
+                value={form.watch("paymentMode")}
                 onValueChange={(value) =>
                   form.setValue(
                     "paymentMode",

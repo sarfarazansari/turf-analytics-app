@@ -295,7 +295,7 @@ export default function CreateBookingForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Payment Mode</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                           <SelectTrigger className="w-full"><SelectValue placeholder="Select Mode" /></SelectTrigger>
                         </FormControl>
