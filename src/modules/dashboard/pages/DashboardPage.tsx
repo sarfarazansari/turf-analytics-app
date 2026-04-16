@@ -15,6 +15,8 @@ import { useHourlyDemand } from "../hooks/useHourlyDemand"
 import { transformHourlyDemand } from "../utils/hourlyTransform"
 import { useWeekdayWeekendStats } from "../hooks/useWeekdayWeekendStats";
 import { WeekdayWeekendComparison } from "../components/WeekdayWeekendComparison";
+import { useCustomerInsights } from "../hooks/useCustomerInsights";
+import { CustomerInsightsSection } from "../components/CustomerInsightsSection";
 
 export const revalidate = 0;
 
@@ -101,8 +103,22 @@ export function DashboardPageComponent() {
     endDate,
   });
 
-  const isLoading = kpiLoading || trendLoading || hourlyLoading || weekdayWeekendLoading
-  const isError = kpiError || trendError || hourlyError || weekdayWeekendError
+
+  // -----------------------------
+  // 3. Customer Insights (new - not implemented yet)
+  // -----------------------------
+
+  const { 
+    data: customerInsightsData, 
+    isLoading: customerInsightsLoading, 
+    isError: customerInsightsError 
+  } = useCustomerInsights({
+    startDate,
+    endDate,
+  });
+
+  const isLoading = kpiLoading || trendLoading || hourlyLoading || weekdayWeekendLoading || customerInsightsLoading;
+  const isError = kpiError || trendError || hourlyError || weekdayWeekendError || customerInsightsError;
   
 
   if (isLoading || isPending) {
@@ -113,7 +129,7 @@ export function DashboardPageComponent() {
     return <div>Error loading dashboard data.</div>;
   }
 
-  console.log(hourlyData)
+  console.log(customerInsightsData)
 
   return (
     <div className="space-y-6">
@@ -155,7 +171,11 @@ export function DashboardPageComponent() {
       {weekdayWeekendData && (
         <WeekdayWeekendComparison data={weekdayWeekendData} />
       )}
-      
+
+      {/* Customer Insights */}
+      {customerInsightsData && (
+        <CustomerInsightsSection data={customerInsightsData} />
+      )}
     </div>
   );
 }

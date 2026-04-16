@@ -86,12 +86,12 @@ export function WeekdayWeekendComparison({ data }: { data: Data }) {
                 </div>
 
                 <div className="flex justify-between text-lg font-semibold">
-                  <span>Wkdy</span>
+                  <span>Weekday</span>
                   <span>{formatValue(m.weekday, m.label)}</span>
                 </div>
 
                 <div className="flex justify-between text-lg font-semibold">
-                  <span>Wknd</span>
+                  <span>Weekend</span>
                   <span>{formatValue(m.weekend, m.label)}</span>
                 </div>
 

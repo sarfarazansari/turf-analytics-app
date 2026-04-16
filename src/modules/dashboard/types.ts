@@ -138,3 +138,33 @@ export interface GetWeekdayWeekendStats {
   weekday: WeekStatItem
   weekend: WeekStatItem
 }
+
+
+export interface CustomerInsights {
+  kpis: {
+    total_customers: number;
+    new_customers: number;
+    returning_customers: number;
+    repeat_rate: number;
+  };
+  activity: {
+    active_customers: number;
+    inactive_customers: number;
+    new_customers: number;
+  };
+  frequency: {
+    one_time: number;
+    mid: number;
+    high: number;
+  };
+  retention: {
+    first_time_only: number;
+    repeat_users: number;
+  };
+  top_customers: {
+    customer_phone: string;
+    customer_name: string;
+    period_bookings: number;
+    lifetime_bookings: number;
+  }[];
+}

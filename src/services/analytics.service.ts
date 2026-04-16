@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import { DashboardAnalytics, DashboardView, DateRange, KPIsData, KPIsResponse, TrendMappedData } from "@/modules/dashboard/types";
+import { CustomerInsights, DashboardAnalytics, DashboardView, DateRange, KPIsData, KPIsResponse, TrendMappedData } from "@/modules/dashboard/types";
 import { mapTrendData } from "@/modules/dashboard/utils/analyticsMapper";
 import dayjs from "dayjs";
 
@@ -236,5 +236,28 @@ export async function getWeekdayWeekendStats({
     weekday: { revenue: 0, bookings: 0, minutes: 0 },
     weekend: { revenue: 0, bookings: 0, minutes: 0 },
   };
+
+}
+
+export async function getCustomerInsights({
+  startDate,
+  endDate,
+}: {
+  startDate: string;
+  endDate: string;
+}) {
+
+  const { data, error } = await supabase.rpc("get_customer_insights", {
+    start_date: startDate,
+    end_date: endDate,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data as CustomerInsights;
+  // supabase returns [{ get_customer_insights: {...} }]
+  // return data[0].get_customer_insights as CustomerInsights;
 
 }
