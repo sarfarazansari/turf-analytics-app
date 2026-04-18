@@ -29,12 +29,17 @@ import { useCreateBooking } from "../hooks/create-booking"
 import { usePricingSlabs } from "../hooks/usePricingSlabs"
 import { supabase } from "@/lib/supabase"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { useCustomerSearch } from "../hooks/useCustomerSearch"
 
 export default function CreateBookingForm() {
   const createBooking = useCreateBooking()
   const { user } = useAuth()
+
   const [successState, setSuccessState] = useState(false)
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
+
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const [searchValue, setSearchValue] = useState("")
 
   const defaultValues = {
     advance_amount: 0,
@@ -56,9 +61,38 @@ export default function CreateBookingForm() {
 
   const {
     watch,
-    reset,
     formState: { isSubmitting },
   } = form
+
+  /* =========================
+     CUSTOMER SEARCH (FIXED)
+  ========================== */
+
+  const { data: suggestions, loading } = useCustomerSearch(searchValue)
+
+  useEffect(() => {
+    if (searchValue.length >= 3 && suggestions.length > 0) {
+      setShowSuggestions(true)
+    } else {
+      setShowSuggestions(false)
+    }
+  }, [searchValue, suggestions])
+
+  function handleSelectSuggestion(item: any) {
+    form.setValue("customer_name", item.name)
+    form.setValue("customer_phone", item.phone)
+
+    // 🔥 important (next-level UX)
+    if (item.last_start) {
+      form.setValue("start_time", dayjs(item.last_start).format("HH:mm"))
+    }
+    if (item.last_end) {
+      form.setValue("end_time", dayjs(item.last_end).format("HH:mm"))
+    }
+
+    setSearchValue("") // 🔥 prevents API retrigger
+    setShowSuggestions(false)
+  }
 
   /* =========================
      TIME BUILD LOGIC
@@ -99,7 +133,7 @@ export default function CreateBookingForm() {
   }, [slabs, startDateTime, endDateTime])
 
   /* =========================
-     MUTATION
+     SESSION FIX
   ========================== */
 
   useEffect(() => {
@@ -107,13 +141,15 @@ export default function CreateBookingForm() {
       if (document.visibilityState === "visible") {
         supabase.auth.getSession();
       }
-    };
+    }
 
-    document.addEventListener("visibilitychange", handler);
+    document.addEventListener("visibilitychange", handler)
+    return () => document.removeEventListener("visibilitychange", handler)
+  }, [])
 
-    return () =>
-      document.removeEventListener("visibilitychange", handler);
-  }, []);
+  /* =========================
+     SUBMIT
+  ========================== */
 
   function onSubmit(values: any) {
     if (!values.start_datetime || !values.end_datetime) {
@@ -131,19 +167,16 @@ export default function CreateBookingForm() {
       p_notes: values.notes || null,
       p_created_by: user?.id,
     }
+
     createBooking.mutate(payload, {
       onError: (error: any) => {
-        console.error("Error creating booking:", error);
-        toast.error(
-          error?.message || "Server not responding. Please try again."
-        );
-        // Reset form to allow user to try again
-        createBooking.reset();
+        toast.error(error?.message || "Server error")
+        createBooking.reset()
       },
       onSuccess: () => {
-        toast.success("Booking created successfully!");
-        createBooking.reset();
-        form.reset(defaultValues);
+        toast.success("Booking created successfully!")
+        createBooking.reset()
+        form.reset(defaultValues)
         setSuccessState(true)
         setTimeout(() => setSuccessState(false), 3000)
       }
@@ -158,7 +191,7 @@ export default function CreateBookingForm() {
     <div className="relative grid md:grid-cols-2 gap-12">
 
       {successState && (
-        <div className="absolute inset-0 bg-[rgba(0,0,0,0.6)]  backdrop-blur-sm flex items-center justify-center z-20">
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-20">
           <div className="bg-white p-8 rounded-xl shadow-xl text-xl font-semibold">
             ✅ Booking Created Successfully
           </div>
@@ -170,19 +203,60 @@ export default function CreateBookingForm() {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 
+              <div className="grid grid-cols-2 gap-4 relative">
 
-              <div className="grid grid-cols-2 gap-4">
+                {/* NAME FIELD */}
                 <FormField
                   control={form.control}
                   name="customer_name"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="relative">
                       <FormLabel>Name</FormLabel>
-                      <FormControl><Input {...field} /></FormControl>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          autoComplete="off"
+                          onChange={(e) => {
+                            field.onChange(e)
+                            setSearchValue(e.target.value)
+                          }}
+                        />
+                      </FormControl>
+
+                      {showSuggestions && (
+                        <div className="absolute z-50 top-full mt-2 w-full bg-white border rounded-md shadow-lg">
+
+                          {loading && (
+                            <div className="p-2 text-sm text-gray-500">
+                              Searching...
+                            </div>
+                          )}
+
+                          {!loading && suggestions.length === 0 && (
+                            <div className="p-2 text-sm text-gray-500">
+                              No results
+                            </div>
+                          )}
+
+                          {!loading && suggestions.map((item, idx) => (
+                            <div
+                              key={idx}
+                              onMouseDown={() => handleSelectSuggestion(item)}
+                              className="px-3 py-2 cursor-pointer hover:bg-gray-100 text-sm"
+                            >
+                              <div className="font-medium">{item.name}</div>
+                              <div className="text-gray-500 text-xs">{item.phone}</div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                {/* PHONE */}
                 <FormField
                   control={form.control}
                   name="customer_phone"
@@ -194,7 +268,10 @@ export default function CreateBookingForm() {
                     </FormItem>
                   )}
                 />
+
               </div>
+
+              {/* REST SAME */}
 
               <div className="grid grid-cols-3 gap-4">
                 <FormField
@@ -227,65 +304,8 @@ export default function CreateBookingForm() {
                   )}
                 />
 
-                <FormField
-  control={form.control}
-  name="start_time"
-  render={({ field }) => (
-    <FormItem>
-      <FormLabel>Start Time</FormLabel>
-
-      <Select onValueChange={field.onChange} value={field.value}>
-        <FormControl>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select start time" />
-          </SelectTrigger>
-        </FormControl>
-
-        <SelectContent>
-          <ScrollArea className="h-60">
-          {Array.from({ length: 24 }, (_, i) => (
-            <SelectItem key={i} value={`${i.toString().padStart(2, "0")}:00`}>
-              {dayjs().hour(i).minute(0).format("hh:mm A")}
-            </SelectItem>
-          ))}
-          </ScrollArea>
-        </SelectContent>
-      </Select>
-
-      <FormMessage />
-    </FormItem>
-  )}
-/>
-
-                <FormField
-  control={form.control}
-  name="end_time"
-  render={({ field }) => (
-    <FormItem>
-      <FormLabel>End Time</FormLabel>
-
-      <Select onValueChange={field.onChange} value={field.value} >
-        <FormControl>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select end time" />
-          </SelectTrigger>
-        </FormControl>
-
-        <SelectContent>
-          <ScrollArea className="h-60">
-          {Array.from({ length: 24 }, (_, i) => (
-            <SelectItem key={i} value={`${i.toString().padStart(2, "0")}:00`}>
-              {dayjs().hour(i).minute(0).format("hh:mm A")}
-            </SelectItem>
-          ))}
-          </ScrollArea>
-        </SelectContent>
-      </Select>
-
-      <FormMessage />
-    </FormItem>
-  )}
-/>
+                <TimeSelect name="start_time" label="Start Time" form={form} />
+                <TimeSelect name="end_time" label="End Time" form={form} />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -297,7 +317,7 @@ export default function CreateBookingForm() {
                       <FormLabel>Payment Mode</FormLabel>
                       <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
-                          <SelectTrigger className="w-full"><SelectValue placeholder="Select Mode" /></SelectTrigger>
+                          <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
                         </FormControl>
                         <SelectContent>
                           <SelectItem value="CASH">Cash</SelectItem>
@@ -322,7 +342,9 @@ export default function CreateBookingForm() {
                           type="number"
                           {...field}
                           value={field.value ?? ""}
-                          onChange={(e) => field.onChange(e.target.value === "" ? "" : Number(e.target.value))}
+                          onChange={(e) =>
+                            field.onChange(e.target.value === "" ? "" : Number(e.target.value))
+                          }
                         />
                       </FormControl>
                       <FormMessage />
@@ -342,6 +364,7 @@ export default function CreateBookingForm() {
                   </FormItem>
                 )}
               />
+
               <Button
                 type="submit"
                 disabled={isSubmitting || createBooking.isPending}
@@ -349,6 +372,7 @@ export default function CreateBookingForm() {
               >
                 {createBooking.isPending ? "Creating..." : "Create Booking"}
               </Button>
+
             </form>
           </Form>
         </CardContent>
@@ -366,6 +390,41 @@ export default function CreateBookingForm() {
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+/* =========================
+   TIME SELECT
+========================== */
+
+function TimeSelect({ name, label, form }: any) {
+  return (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>{label}</FormLabel>
+          <Select onValueChange={field.onChange} value={field.value}>
+            <FormControl>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder={`Select ${label.toLowerCase()}`} />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent>
+              <ScrollArea className="h-60">
+                {Array.from({ length: 24 }, (_, i) => (
+                  <SelectItem key={i} value={`${i.toString().padStart(2, "0")}:00`}>
+                    {dayjs().hour(i).minute(0).format("hh:mm A")}
+                  </SelectItem>
+                ))}
+              </ScrollArea>
+            </SelectContent>
+          </Select>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
   )
 }
 
