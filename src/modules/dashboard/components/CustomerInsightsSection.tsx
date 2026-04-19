@@ -78,7 +78,7 @@ export function CustomerInsightsSection({ data }: Props) {
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            {data.top_customers.map((c) => (
+            {data.top_customers && data.top_customers.length > 0 && data.top_customers.map((c) => (
               <div
                 key={c.customer_phone}
                 className="flex justify-between border-b pb-1"

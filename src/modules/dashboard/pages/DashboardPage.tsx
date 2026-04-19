@@ -17,6 +17,8 @@ import { useWeekdayWeekendStats } from "../hooks/useWeekdayWeekendStats";
 import { WeekdayWeekendComparison } from "../components/WeekdayWeekendComparison";
 import { useCustomerInsights } from "../hooks/useCustomerInsights";
 import { CustomerInsightsSection } from "../components/CustomerInsightsSection";
+import isoWeek from "dayjs/plugin/isoWeek";
+dayjs.extend(isoWeek);
 
 export const revalidate = 0;
 
@@ -37,8 +39,8 @@ export function DashboardPageComponent() {
   let endDate: string;
 
   if (view === "WEEKLY") {
-    startDate = dayjs().startOf("week").add(1, "day").format("YYYY-MM-DD"); // Monday
-    endDate = dayjs().endOf("week").add(1, "day").format("YYYY-MM-DD"); // Sunday
+    startDate = dayjs().startOf("isoWeek").format("YYYY-MM-DD"); // Monday
+    endDate = dayjs().endOf("isoWeek").format("YYYY-MM-DD"); // Sunday
   } else if (view === "MONTHLY") {
     startDate = dayjs().startOf("month").format("YYYY-MM-DD");
     endDate = dayjs().format("YYYY-MM-DD");
@@ -46,6 +48,8 @@ export function DashboardPageComponent() {
     startDate = dateRange?.from!;
     endDate = dateRange?.to!;
   }
+
+  console.log("Resolved Date Range:", { startDate, endDate });
 
   // -----------------------------
   // 2. KPI (existing)
