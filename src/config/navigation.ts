@@ -19,8 +19,14 @@ export const NAVIGATION: NavItem[] = [
     roles: ["ADMIN"],
   },
   {
-    label: "New Booking",
+    label: "New",
     href: "/bookings/new",
+    roles: ["ADMIN", "STAFF"],
+    exact: true,
+  },
+  {
+    label: "Customers",
+    href: "/customers",
     roles: ["ADMIN", "STAFF"],
     exact: true,
   },
