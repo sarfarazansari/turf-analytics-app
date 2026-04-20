@@ -22,10 +22,13 @@ export default function CustomersFilters({
   const router = useRouter();
 
   const update = (newFrom: number, newTo: number) => {
-    if (newFrom >= newTo) return;
+  if (newFrom >= newTo) return;
 
-    router.push(`/customers?from=${newFrom}&to=${newTo}&page=1`);
-  };
+  const url = `/customers?from=${newFrom}&to=${newTo}&page=1`;
+
+  router.replace(url);
+  router.refresh(); // 🔥 forces data re-fetch in production
+};
 
   return (
     <div className="flex gap-4">

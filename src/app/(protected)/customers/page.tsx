@@ -2,7 +2,7 @@
 
 import RoleGuard from "@/components/RoleGuard";
 import CustomersPage from "@/modules/customers/components/CustomersPage";
-
+export const dynamic = "force-dynamic";
 export default function CustomerPage() {
 
   return (
