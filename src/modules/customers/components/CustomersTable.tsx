@@ -13,6 +13,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DATE_FORMAT_UI } from "@/constants";
 import dayjs from "dayjs";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const PAGE_SIZE = 20;
 
@@ -26,7 +27,7 @@ export default function CustomersTable({
 }: any) {
   const router = useRouter();
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Skeleton className="h-80 w-full" />;
   if (error) return <div>Error loading data</div>;
   if (!data || data.length === 0) return <div>No results</div>;
 

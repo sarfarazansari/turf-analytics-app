@@ -86,6 +86,7 @@ export default function AppHeader() {
             alt="Turf Analytics"
             width={34}
             height={34}
+            priority
           />
         </Link>
 

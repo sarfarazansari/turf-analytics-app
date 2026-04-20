@@ -18,6 +18,7 @@ import { WeekdayWeekendComparison } from "../components/WeekdayWeekendComparison
 import { useCustomerInsights } from "../hooks/useCustomerInsights";
 import { CustomerInsightsSection } from "../components/CustomerInsightsSection";
 import isoWeek from "dayjs/plugin/isoWeek";
+import { Skeleton } from "@/components/ui/skeleton";
 dayjs.extend(isoWeek);
 
 export const revalidate = 0;
@@ -126,7 +127,7 @@ export function DashboardPageComponent() {
   
 
   if (isLoading || isPending) {
-    return <div>Loading dashboard...</div>;
+    return <Skeleton className="h-80 w-full" />;
   }
 
   if (isError) {

@@ -4,6 +4,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import CustomersFilters from "./CustomersFilters";
 import CustomersTable from "./CustomersTable";
 import { useCustomers } from "../hooks/useCustomers";
+import { useEffect } from "react";
 
 export default function CustomersPage() {
   const searchParams = useSearchParams();
@@ -14,10 +15,11 @@ export default function CustomersPage() {
   const page = Number(searchParams.get("page") || 1);
 
   // redirect if missing params (important)
-  if (!from || !to) {
-    router.replace("/customers?from=18&to=22&page=1");
-    return null;
-  }
+  useEffect(() => {
+    if (!from || !to) {
+      router.push("/customers?from=18&to=22&page=1");
+    }
+  }, [from, to]);
 
   const { data, loading, error } = useCustomers({
     from,
