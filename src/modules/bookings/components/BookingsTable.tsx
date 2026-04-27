@@ -16,6 +16,7 @@ import {
   ChevronUp,
   ChevronDown,
   Eye,
+  Trash2,
 } from "lucide-react";
 
 import type {
@@ -36,6 +37,7 @@ interface BookingsTableProps {
   isFetching: boolean;
   onPageChange: (page: number) => void;
   onView: (bookingId: string) => void;
+  onDelete: (bookingId: string) => void;
 }
 
 const CELL_COUNT = 9; // Update this if you add/remove columns
@@ -49,6 +51,7 @@ export function BookingsTable({
   isFetching,
   onPageChange,
   onView,
+  onDelete,
 }: BookingsTableProps) {
   const totalPages = Math.ceil(totalCount / limit);
 
@@ -145,10 +148,6 @@ export function BookingsTable({
             ) : (
               data.map((row) => (
                 <TableRow key={row.id}>
-                  {/* <TableCell className="font-medium">
-                    {row.id}
-                  </TableCell> */}
-
                   <TableCell>
                     <div className="flex flex-col">
                       <span>
@@ -228,6 +227,15 @@ export function BookingsTable({
                       onClick={() => onView(row.id)}
                     >
                       <Eye className="h-4 w-4" />
+                    </Button>
+
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="cursor-pointer text-destructive hover:text-destructive"
+                      onClick={() => onDelete(row.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
                     </Button>
                   </TableCell>
                 </TableRow>
