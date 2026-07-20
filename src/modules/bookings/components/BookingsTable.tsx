@@ -1,6 +1,5 @@
 "use client";
 
-import dayjs from "dayjs";
 import {
   Table,
   TableBody,
@@ -24,9 +23,9 @@ import type {
   AdminBookingSortBy,
   SortOrder,
 } from "@/interfaces";
-import { DATE_FORMAT_UI } from "@/constants";
 import { cn } from "@/lib/utils";
 import { formatCurrency } from "@/lib/currency-format";
+import { formatDate, formatTime } from "@/lib/date";
 
 interface BookingsTableProps {
   data: AdminBookingRow[];
@@ -61,7 +60,6 @@ export function BookingsTable({
         <Table>
           <TableHeader className="sticky top-0 bg-card z-10">
             <TableRow>
-              {/* <TableHead>ID</TableHead> */}
               <TableHead
                 className="cursor-pointer"
               >
@@ -151,18 +149,12 @@ export function BookingsTable({
                   <TableCell>
                     <div className="flex flex-col">
                       <span>
-                        {dayjs(row.start_datetime).format(
-                          DATE_FORMAT_UI
-                        )}
+                        {formatDate(row.start_datetime)}
                       </span>
                       <span className="text-sm text-muted-foreground">
-                        {dayjs(row.start_datetime).format(
-                          "hh:mm A"
-                        )}{" "}
+                        {formatTime(row.start_datetime)}{" "}
                         –{" "}
-                        {dayjs(row.end_datetime).format(
-                          "hh:mm A"
-                        )}
+                        {formatTime(row.end_datetime)}
                       </span>
                     </div>
                   </TableCell>

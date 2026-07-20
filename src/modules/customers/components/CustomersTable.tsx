@@ -11,9 +11,8 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { DATE_FORMAT_UI } from "@/constants";
-import dayjs from "dayjs";
 import { Skeleton } from "@/components/ui/skeleton";
+import { formatDate } from "@/lib/date";
 
 const PAGE_SIZE = 20;
 
@@ -62,7 +61,7 @@ export default function CustomersTable({
                   {row.total_bookings}
                 </TableCell>
                 <TableCell>
-                  {dayjs(row.last_played_at).format(DATE_FORMAT_UI)}
+                  {formatDate(row.last_played_at)}
                 </TableCell>
               </TableRow>
             ))}

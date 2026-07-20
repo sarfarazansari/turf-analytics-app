@@ -1,6 +1,6 @@
 "use client";
 
-import dayjs from "dayjs";
+import dayjs from "@/lib/dayjs";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";

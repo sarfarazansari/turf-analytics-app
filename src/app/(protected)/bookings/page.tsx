@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import dayjs from "dayjs";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import type {
@@ -59,7 +58,6 @@ export default function BookingsPage() {
     const query = buildSearchParams(updated);
 
     setPage(1); // Always reset page
-    console.log("Updating URL with filters:", query);
     router.replace(`?${query}`, { scroll: false });
   };
 

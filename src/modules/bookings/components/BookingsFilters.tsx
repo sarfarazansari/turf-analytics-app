@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import dayjs from "dayjs";
+import dayjs from "@/lib/dayjs";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -27,8 +27,7 @@ import { Label } from "@/components/ui/label";
 import { CalendarIcon, X } from "lucide-react";
 import type { AdminBookingFilters } from "@/interfaces";
 import { bookingsFiltersSchema } from "../bookingsFiltersSchema";
-import { DATE_FORMAT_UI } from "@/constants";
-import { DateRange } from "react-day-picker";
+import { formatDate } from "@/lib/date";
 
 type FormValues = z.infer<typeof bookingsFiltersSchema>;
 
@@ -169,8 +168,8 @@ export function BookingsFilters({
                 className="w-full justify-start text-left font-normal"
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
-                {dayjs(dateRange.from).format(DATE_FORMAT_UI)} —{" "}
-                {dayjs(dateRange.to).format(DATE_FORMAT_UI)}
+                {formatDate(dateRange.from)} —{" "}
+                {formatDate(dateRange.to)}
               </Button>
             </PopoverTrigger>
             <PopoverContent  className="w-auto p-0" align="start">

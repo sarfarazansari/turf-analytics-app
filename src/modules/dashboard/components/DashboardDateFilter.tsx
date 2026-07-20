@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import dayjs from "dayjs"
+import dayjs from "@/lib/dayjs"
 import { DateRange } from "react-day-picker"
 
 import { Button } from "@/components/ui/button"

@@ -1,7 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import { CustomerInsights, DashboardAnalytics, DashboardView, DateRange, KPIsData, KPIsResponse, TrendMappedData } from "@/modules/dashboard/types";
 import { mapTrendData } from "@/modules/dashboard/utils/analyticsMapper";
-import dayjs from "dayjs";
+import dayjs from "@/lib/dayjs";
 
 
 interface UseDashboardAnalyticsProps {

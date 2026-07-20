@@ -14,7 +14,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { toast } from "react-hot-toast"
 import { format } from "date-fns"
 import { DATE_FORMAT_CALENDAR } from "@/constants"
-import dayjs from "dayjs"
+import dayjs from "@/lib/dayjs"
 import { useAuth } from "@/context/AuthContext"
 import { calculateBookingTotal } from "@/lib/calculate-price"
 import {

@@ -5,7 +5,7 @@ import { DashboardHeader } from "../components/DashboardHeader";
 import { SummaryCards } from "../components/SummaryCards";
 import { RevenueTrendChart } from "../components/RevenueTrendChart";
 import { BookingTrendChart } from "../components/BookingTrendChart";
-import dayjs from "dayjs";
+import dayjs from "@/lib/dayjs";
 import { PaymentModeChart } from "../components/PaymentModeChart";
 import { useKpiAnalytics } from "../hooks/useKpiAnalytics";
 import type { DateRange, HourlyDemandItem } from "../types";
@@ -49,8 +49,6 @@ export function DashboardPageComponent() {
     startDate = dateRange?.from!;
     endDate = dateRange?.to!;
   }
-
-  console.log("Resolved Date Range:", { startDate, endDate });
 
   // -----------------------------
   // 2. KPI (existing)
@@ -133,8 +131,6 @@ export function DashboardPageComponent() {
   if (isError) {
     return <div>Error loading dashboard data.</div>;
   }
-
-  console.log(customerInsightsData)
 
   return (
     <div className="space-y-6">

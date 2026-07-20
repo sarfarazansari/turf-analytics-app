@@ -1,5 +1,5 @@
 import { z } from "zod";
-import dayjs from "dayjs";
+import dayjs from "@/lib/dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 
 dayjs.extend(isSameOrAfter);

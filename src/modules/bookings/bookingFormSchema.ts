@@ -1,5 +1,5 @@
 import { z } from "zod";
-import dayjs from "dayjs";
+import dayjs from "@/lib/dayjs";
 
 export const bookingFormSchema = z.object({
   customer_name: z
