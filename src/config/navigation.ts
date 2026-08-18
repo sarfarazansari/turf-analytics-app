@@ -30,4 +30,10 @@ export const NAVIGATION: NavItem[] = [
     roles: ["ADMIN", "STAFF"],
     exact: true,
   },
+  {
+    label: "Cash",
+    href: "/cash",
+    roles: ["ADMIN"],
+    exact: true,
+  },
 ];
