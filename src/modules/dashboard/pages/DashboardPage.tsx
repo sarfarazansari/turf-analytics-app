@@ -6,7 +6,6 @@ import { SummaryCards } from "../components/SummaryCards";
 import { RevenueTrendChart } from "../components/RevenueTrendChart";
 import { BookingTrendChart } from "../components/BookingTrendChart";
 import dayjs from "@/lib/dayjs";
-import { PaymentModeChart } from "../components/PaymentModeChart";
 import { useKpiAnalytics } from "../hooks/useKpiAnalytics";
 import type { DateRange, HourlyDemandItem } from "../types";
 import { useTrendAnalytics } from "../hooks/useTrendAnalytics";
@@ -20,6 +19,7 @@ import { CustomerInsightsSection } from "../components/CustomerInsightsSection";
 import isoWeek from "dayjs/plugin/isoWeek";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { SummaryCardsSkeleton } from "../components/SummaryCardsSkeleton";
 dayjs.extend(isoWeek);
 
 export const revalidate = 0;
