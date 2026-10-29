@@ -4,11 +4,13 @@ import { AdminBookingFilters } from "@/interfaces";
 export function parseFiltersFromSearchParams(
   params: URLSearchParams
 ): AdminBookingFilters {
-  const today = dayjs().format("YYYY-MM-DD");
+  const today = dayjs();
+  const defaultFrom = today.startOf("month").format("YYYY-MM-DD");
+  const defaultTo = today.format("YYYY-MM-DD");
 
   return {
-    fromDate: params.get("from") || today,
-    toDate: params.get("to") || today,
+    fromDate: params.get("from") || defaultFrom,
+    toDate: params.get("to") || defaultTo,
     bookingStatus: (params.get("bookingStatus") as any) || "ALL",
     paymentStatus: (params.get("paymentStatus") as any) || "ALL",
     search: params.get("search") || "",
