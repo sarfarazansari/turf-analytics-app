@@ -29,6 +29,7 @@
 | UI-10 | Add/refresh responsive audit and implementation notes | DONE | This work log records task status, implementation scope, and verification limits. |
 | UI-11 | Add retry actions to Dashboard and Cash data errors | DONE | Dashboard and Cash data error states now offer retry actions. |
 | UI-12 | Replace generic dashboard loading placeholder with a responsive skeleton | DONE | Loading layout now reflects the dashboard header, KPI cards, and chart sections. |
+| UI-13 | Fix Dashboard Customer Insights card text overflow | DONE | KPI cards now use responsive columns; Customer Activity, Frequency, and Retention metrics use responsive grids and separate labels/values; long customer names/phone numbers wrap safely; empty Top Customers state is shown explicitly. |
 | QA-01 | Review diffs and check changed files for accidental edits | DONE | Reviewed changed-file list and re-fetched critical source files; no unintended files are present. |
 | QA-02 | Run lint/typecheck/build if an executable environment is available | BLOCKED | Local clone failed because the execution environment could not resolve github.com; Vercel status was still pending. No lint/build result is claimed. |
 | QA-03 | Browser-test target viewports (320, 360, 390, 430, 768, 1024, 1280, 1440px) | BLOCKED | Requires an executable browser/runtime; source-only checks are not visual verification |
@@ -37,14 +38,16 @@
 
 ### 2026-10-29
 - Read the latest `master` tree and relevant UI source files.
-- Created `feature/ui-responsive-audit-fixes` directly from the latest `master` commit above.
+- Created `feature/ui-responsive-audit-fixes` directly from the latest inspected `master` commit.
+- Fixed Customer Insights layout after screenshot review: replaced fixed 4/3-column grids with responsive breakpoints and made metric content wrap instead of overflowing card boundaries.
+- Added an explicit empty state for Top Customers when no records exist.
 - No pull request opened and no merge performed.
 
 ## Final verification
-- Working branch was created directly from the latest inspected `master` SHA `e8f60d7151d3aef97415945cbef36683e21c9cea`; branch is 0 commits behind `master`.
+- Working branch was created directly from the latest inspected `master` SHA `e8f60d7151d3aef97415945cbef36683e21c9cea`; branch was 0 commits behind `master` at creation.
 - Implemented responsive shell spacing, responsive date pickers and filters, mobile form layouts, KPI breakpoints, viewport-safe drawers, mobile navigation improvements, responsive pagination, and a structured dashboard loading skeleton.
 - Fixed the Cash Daily view so settlements load from the real query; the Add Settlement drawer is mounted for both Daily and Settlements entry points.
-- Added retry actions to Dashboard and Cash data error states.
+- Fixed Customer Insights text overflow seen in the user-provided screenshot.
 - Source-level review only. A local clone attempt failed with `Could not resolve host: github.com`; therefore ESLint/build were not run. The latest Vercel check was `pending`.
 - Browser viewport verification remains blocked. Do not treat the target viewport matrix as passed until it is tested in a browser.
 - No pull request was opened and no merge was performed.
