@@ -22,16 +22,16 @@ export function CashTabs({
       value={value}
       onValueChange={(value) => onChange(value as CashTab)}
     >
-      <TabsList>
-        <TabsTrigger value="daily">
+      <TabsList className="grid h-auto w-full grid-cols-3">
+        <TabsTrigger value="daily" className="px-2 text-xs sm:text-sm">
           Daily Cash
         </TabsTrigger>
 
-        <TabsTrigger value="expenses">
+        <TabsTrigger value="expenses" className="px-2 text-xs sm:text-sm">
           Expenses
         </TabsTrigger>
 
-        <TabsTrigger value="settlements">
+        <TabsTrigger value="settlements" className="px-2 text-xs sm:text-sm">
           Settlements
         </TabsTrigger>
       </TabsList>

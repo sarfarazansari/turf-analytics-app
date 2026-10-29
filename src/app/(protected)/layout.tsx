@@ -34,7 +34,7 @@ export default function ProtectedLayout({
   return (
     <div className="min-h-screen">
       <AppHeader />
-      <main className="p-6">{children}</main>
+      <main className="p-3 sm:p-4 md:p-6">{children}</main>
     </div>
   );
 }

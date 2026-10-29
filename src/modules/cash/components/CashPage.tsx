@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 
 import { CashHeader } from "./CashHeader";
 import { CashTabs } from "./CashTabs";
@@ -49,11 +50,18 @@ export function CashPageComponent() {
     isLoading: isSettlementsLoading,
     isError: isSettlementsError,
     refetch: refetchSettlements,
-  } = useCashSettlements(selectedDate, activeTab === "settlements");
+  } = useCashSettlements(selectedDate, activeTab === "settlements" || activeTab === "daily");
 
 
   if (isError) {
-    return <div>Error loading cash data.</div>;
+    return (
+      <div role="alert" className="flex flex-col items-start gap-3 rounded-lg border p-4">
+        <p className="text-sm text-destructive">Error loading daily cash data.</p>
+        <Button variant="outline" onClick={() => void refetchDailyCash()}>
+          Retry
+        </Button>
+      </div>
+    );
   }
 
   const cashAvailable =
@@ -61,7 +69,7 @@ export function CashPageComponent() {
   (dailyCash?.cashExpenses ?? 0);
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6">
       {/* Row 1 — Page Header */}
       <div>
         <h1 className="text-2xl font-semibold">Cash</h1>
@@ -88,6 +96,13 @@ export function CashPageComponent() {
         onChange={setActiveTab}
       />
 
+      <AddSettlementDrawer
+        businessDate={selectedDate}
+        remainingCash={dailyCash?.cashInHand ?? 0}
+        isOpen={isSettlementDrawerOpen}
+        onClose={() => setIsSettlementDrawerOpen(false)}
+      />
+
       {/* Row 4 — Selected Tab Content */}
 
       {activeTab === "daily" && (
@@ -106,14 +121,18 @@ export function CashPageComponent() {
             onAddSettlement={() => setIsSettlementDrawerOpen(true)}
           />
 
-          <AddSettlementDrawer
-            businessDate={selectedDate}
-            remainingCash={dailyCash?.cashInHand ?? 0}
-            isOpen={isSettlementDrawerOpen}
-            onClose={() => setIsSettlementDrawerOpen(false)}
-          />
-
-          <CashSettlementsTable settlements={[]} onAddSettlement={() => setIsSettlementDrawerOpen(true)} />
+          {isSettlementsLoading ? (
+            <Skeleton className="h-64 w-full" />
+          ) : isSettlementsError ? (
+            <div role="alert" className="flex flex-col items-start gap-3 rounded-lg border p-4">
+              <p className="text-sm text-destructive">Error loading settlements.</p>
+              <Button variant="outline" onClick={() => void refetchSettlements()}>
+                Retry
+              </Button>
+            </div>
+          ) : (
+            <CashSettlementsTable settlements={settlements} onAddSettlement={() => setIsSettlementDrawerOpen(true)} />
+          )}
         </div>
       )}
 
@@ -123,8 +142,11 @@ export function CashPageComponent() {
           {isExpensesLoading ? (
             <Skeleton className="h-64 w-full" />
           ) : isExpensesError ? (
-            <div className="text-sm text-destructive">
-              Error loading expenses.
+            <div role="alert" className="flex flex-col items-start gap-3 rounded-lg border p-4">
+              <p className="text-sm text-destructive">Error loading expenses.</p>
+              <Button variant="outline" onClick={() => void refetchExpenses()}>
+                Retry
+              </Button>
             </div>
           ) : (
             <CashExpensesTable expenses={expenses} onAddExpense={() => setIsExpenseDrawerOpen(true)} />
@@ -143,8 +165,11 @@ export function CashPageComponent() {
           {isSettlementsLoading ? (
             <Skeleton className="h-64 w-full" />
           ) : isSettlementsError ? (
-            <div className="text-sm text-destructive">
-              Error loading settlements.
+            <div role="alert" className="flex flex-col items-start gap-3 rounded-lg border p-4">
+              <p className="text-sm text-destructive">Error loading settlements.</p>
+              <Button variant="outline" onClick={() => void refetchSettlements()}>
+                Retry
+              </Button>
             </div>
           ) : (
             <CashSettlementsTable settlements={settlements} onAddSettlement={() => setIsSettlementDrawerOpen(true)} />

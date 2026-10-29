@@ -188,22 +188,22 @@ export default function CreateBookingForm() {
   ========================== */
 
   return (
-    <div className="relative grid md:grid-cols-2 gap-12">
+    <div className="relative grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-2 lg:gap-12">
 
       {successState && (
         <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-20">
-          <div className="bg-white p-8 rounded-xl shadow-xl text-xl font-semibold">
+          <div className="max-w-[calc(100%-2rem)] rounded-xl bg-white p-4 text-lg font-semibold shadow-xl sm:p-8 sm:text-xl">
             ✅ Booking Created Successfully
           </div>
         </div>
       )}
 
       <Card>
-        <CardContent className="p-6 space-y-4">
+        <CardContent className="p-4 space-y-4 sm:p-6">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 
-              <div className="grid grid-cols-2 gap-4 relative">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 relative">
 
                 {/* NAME FIELD */}
                 <FormField
@@ -308,7 +308,7 @@ export default function CreateBookingForm() {
                 <TimeSelect name="end_time" label="End Time" form={form} />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <FormField
                   control={form.control}
                   name="payment_mode"

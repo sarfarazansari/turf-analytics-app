@@ -88,7 +88,7 @@ export default function BookingsPage() {
 
   return (
     <RoleGuard allowedRoles={["ADMIN"]}>
-      <div className="space-y-6 p-6">
+      <div className="space-y-6">
         {/* Summary */}
         <SummaryStrip
           summary={data?.summary}
