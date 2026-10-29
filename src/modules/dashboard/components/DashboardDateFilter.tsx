@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import dayjs from "@/lib/dayjs"
 import { DateRange } from "react-day-picker"
 
@@ -18,6 +18,16 @@ interface DashboardDateFilterProps {
 
 export function DashboardDateFilter({ onChange }: DashboardDateFilterProps) {
   const [range, setRange] = useState<DateRange | undefined>()
+  const [calendarMonths, setCalendarMonths] = useState(1)
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 768px)")
+    const updateCalendarMonths = () => setCalendarMonths(mediaQuery.matches ? 2 : 1)
+
+    updateCalendarMonths()
+    mediaQuery.addEventListener("change", updateCalendarMonths)
+    return () => mediaQuery.removeEventListener("change", updateCalendarMonths)
+  }, [])
 
   function handleSelect(value: DateRange | undefined) {
     setRange(value)
@@ -40,12 +50,12 @@ export function DashboardDateFilter({ onChange }: DashboardDateFilterProps) {
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="w-auto p-0">
+      <PopoverContent className="w-auto max-w-[calc(100vw-1.5rem)] overflow-hidden p-0">
         <Calendar
           mode="range"
           selected={range}
           onSelect={handleSelect}
-          numberOfMonths={2}
+          numberOfMonths={calendarMonths}
         />
       </PopoverContent>
     </Popover>

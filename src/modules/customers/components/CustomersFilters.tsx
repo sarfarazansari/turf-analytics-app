@@ -31,13 +31,13 @@ export default function CustomersFilters({
 };
 
   return (
-    <div className="flex gap-4">
+    <div className="flex w-full flex-wrap gap-3 sm:gap-4">
       {/* Start Time */}
       <Select
         value={String(from)}
         onValueChange={(val) => update(Number(val), to)}
       >
-        <SelectTrigger className="w-30">
+        <SelectTrigger className="w-[calc(50%-0.375rem)] min-w-0 sm:w-30">
           <SelectValue placeholder="Start" />
         </SelectTrigger>
         <SelectContent>
@@ -54,7 +54,7 @@ export default function CustomersFilters({
         value={String(to)}
         onValueChange={(val) => update(from, Number(val))}
       >
-        <SelectTrigger className="w-30">
+        <SelectTrigger className="w-[calc(50%-0.375rem)] min-w-0 sm:w-30">
           <SelectValue placeholder="End" />
         </SelectTrigger>
         <SelectContent>

@@ -7,7 +7,7 @@ export default function CustomerPage() {
 
   return (
     <RoleGuard allowedRoles={["ADMIN"]}>
-      <div className="space-y-6 p-6">
+      <div className="space-y-6">
         <CustomersPage />
       </div>
     </RoleGuard>

@@ -20,17 +20,17 @@ export function DashboardHeader({
   onDateRangeChange,
 }: DashboardHeaderProps) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
       <h1 className="text-2xl font-semibold">Dashboard</h1>
 
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center gap-2 sm:justify-end">
         {/* View Switch */}
-        <div className="flex rounded-md border overflow-hidden">
+        <div className="flex flex-wrap rounded-md border overflow-hidden">
           {["WEEKLY", "MONTHLY", "CUSTOM"].map((item) => (
             <button
               key={item}
               onClick={() => onViewChange(item as DashboardView)}
-              className={`px-4 py-2 text-sm transition ${
+              className={`px-2 py-2 text-xs transition sm:px-4 sm:text-sm ${
                 view === item
                   ? "bg-black text-white"
                   : "bg-white text-black hover:bg-gray-100"

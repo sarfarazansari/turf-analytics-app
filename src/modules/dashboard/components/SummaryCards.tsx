@@ -51,7 +51,7 @@ export function SummaryCards({
 
   
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
       {cards.map((card) => {
         const isPositive = card.change >= 0;
 
@@ -63,11 +63,11 @@ export function SummaryCards({
               <CardTitle>{card.label}</CardTitle>
             </CardHeader>
 
-            <CardContent className="mt-2 flex items-end justify-between">
-              <h2 className="text-xl font-semibold">{card.value}</h2>
+            <CardContent className="mt-2 flex min-w-0 flex-wrap items-end justify-between gap-2">
+              <h2 className="min-w-0 break-words text-lg font-semibold sm:text-xl">{card.value}</h2>
 
               <span
-                className={`text-sm font-medium ${
+                className={`shrink-0 text-sm font-medium ${
                   isPositive ? "text-green-600" : "text-red-600"
                 }`}
               >

@@ -124,14 +124,6 @@ export function BookingsTable({
                     <Skeleton className="h-6 w-20 rounded-full" />
                   </TableCell>
 
-                  <TableCell>
-                    <Skeleton className="h-6 w-20 rounded-full" />
-                  </TableCell>
-
-                  <TableCell>
-                    <Skeleton className="h-4 w-20" />
-                  </TableCell>
-
                   <TableCell className="text-right">
                     <Skeleton className="h-8 w-8 rounded-md ml-auto" />
                   </TableCell>
@@ -239,7 +231,7 @@ export function BookingsTable({
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between p-4 border-t">
+        <div className="flex flex-wrap items-center justify-between gap-3 p-3 border-t sm:p-4">
           <div className="text-sm text-muted-foreground">
             Showing {(page - 1) * limit + 1}–
             {Math.min(page * limit, totalCount)} of{" "}

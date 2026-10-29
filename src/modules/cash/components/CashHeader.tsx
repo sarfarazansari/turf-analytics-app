@@ -47,8 +47,8 @@ export function CashHeader({
   };
 
   return (
-    <div className="flex items-center justify-between gap-4">
-      <div className="flex items-center gap-2">
+    <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-wrap items-center gap-2">
         <Popover
           open={isDatePopoverOpen}
           onOpenChange={setIsDatePopoverOpen}
@@ -56,7 +56,7 @@ export function CashHeader({
           <PopoverTrigger asChild>
             <Button
               variant="outline"
-              className="pl-3 text-left font-normal"
+              className="max-w-full truncate pl-3 text-left font-normal"
             >
               {format(selectedDate, DATE_FORMAT_CALENDAR)}
             </Button>
@@ -104,7 +104,7 @@ export function CashHeader({
         </Button>
       </div>
 
-      <Button variant="outline"  onClick={onRefresh}>
+      <Button variant="outline" className="self-start sm:self-auto" onClick={onRefresh}>
         Refresh
       </Button>
     </div>

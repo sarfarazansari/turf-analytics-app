@@ -110,7 +110,7 @@ export function BookingDetailsDrawer({
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="w-125 overflow-y-auto">
+      <SheetContent className="w-[min(31.25rem,calc(100vw-1rem))] max-w-none overflow-y-auto">
         <SheetHeader>
           <SheetTitle>Booking Details</SheetTitle>
           <SheetDescription className="sr-only">
@@ -121,7 +121,7 @@ export function BookingDetailsDrawer({
         {isLoading || !data ? (
           <div className="py-10 text-center">Loading...</div>
         ) : (
-          <div className="space-y-6 p-6">
+          <div className="space-y-6 p-4 sm:p-6">
             {/* Booking Info */}
             <div className="space-y-2">
               <div className="font-semibold">

@@ -19,6 +19,7 @@ import {
 import {
   Sheet,
   SheetContent,
+  SheetClose,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -56,7 +57,7 @@ export default function AppHeader() {
 
         {/* Mobile Menu */}
         <Sheet>
-          <SheetTrigger className="md:hidden">
+          <SheetTrigger aria-label="Open navigation menu" className="inline-flex h-10 w-10 items-center justify-center rounded-md md:hidden">
             <Menu size={22} />
           </SheetTrigger>
 
@@ -70,9 +71,11 @@ export default function AppHeader() {
 
             <div className="mt-6 flex flex-col gap-4 p-6">
               {navItems.map((item) => (
-                <Link key={item.href} href={item.href}>
-                  {item.label}
-                </Link>
+                <SheetClose asChild>
+                  <Link key={item.href} href={item.href} className="rounded-md py-1">
+                    {item.label}
+                  </Link>
+                </SheetClose>
               ))}
             </div>
 

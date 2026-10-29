@@ -44,6 +44,18 @@ export function BookingsFilters({
 }: BookingsFiltersProps) {
   const today = dayjs();
   const [activePreset, setActivePreset] = useState<PresetType>("TODAY");
+  const [calendarMonths, setCalendarMonths] = useState(1);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    const updateCalendarMonths = () => {
+      setCalendarMonths(mediaQuery.matches ? 2 : 1);
+    };
+
+    updateCalendarMonths();
+    mediaQuery.addEventListener("change", updateCalendarMonths);
+    return () => mediaQuery.removeEventListener("change", updateCalendarMonths);
+  }, []);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(bookingsFiltersSchema),
@@ -157,7 +169,7 @@ export function BookingsFilters({
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
         {/* Date Range */}
         <div className="space-y-2">
           <Label>Date Range</Label>
@@ -172,7 +184,7 @@ export function BookingsFilters({
                 {formatDate(dateRange.to)}
               </Button>
             </PopoverTrigger>
-            <PopoverContent  className="w-auto p-0" align="start">
+            <PopoverContent className="w-auto max-w-[calc(100vw-1.5rem)] overflow-hidden p-0" align="start">
               <Calendar
                 mode="range"
                 selected={dateRange}
@@ -189,7 +201,7 @@ export function BookingsFilters({
                 disabled={(date) =>
                   dayjs(date).isAfter(today, "day")
                 }
-                numberOfMonths={2}
+                numberOfMonths={calendarMonths}
               />
             </PopoverContent>
           </Popover>

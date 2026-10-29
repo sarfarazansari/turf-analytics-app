@@ -19,6 +19,7 @@ import { useCustomerInsights } from "../hooks/useCustomerInsights";
 import { CustomerInsightsSection } from "../components/CustomerInsightsSection";
 import isoWeek from "dayjs/plugin/isoWeek";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 dayjs.extend(isoWeek);
 
 export const revalidate = 0;
@@ -57,8 +58,9 @@ export function DashboardPageComponent() {
   const { 
     data: kpiData,
     isLoading: kpiLoading,
-    isError: kpiError, 
-    isPending 
+    isError: kpiError,
+    isPending,
+    refetch: refetchKpi,
   } = useKpiAnalytics({
     view,
     dateRange: view === "CUSTOM" ? dateRange : null,
@@ -72,6 +74,7 @@ export function DashboardPageComponent() {
     data: trendData,
     isLoading: trendLoading,
     isError: trendError,
+    refetch: refetchTrend,
   } = useTrendAnalytics({
     startDate,
     endDate,
@@ -86,6 +89,7 @@ export function DashboardPageComponent() {
     data: hourlyRaw,
     isLoading: hourlyLoading,
     isError: hourlyError,
+    refetch: refetchHourly,
   } = useHourlyDemand({
     startDate,
     endDate,
@@ -101,6 +105,7 @@ export function DashboardPageComponent() {
     data: weekdayWeekendData,
     isLoading: weekdayWeekendLoading,
     isError: weekdayWeekendError,
+    refetch: refetchWeekdayWeekend,
   } = useWeekdayWeekendStats({
     startDate,
     endDate,
@@ -114,7 +119,8 @@ export function DashboardPageComponent() {
   const { 
     data: customerInsightsData, 
     isLoading: customerInsightsLoading, 
-    isError: customerInsightsError 
+    isError: customerInsightsError,
+    refetch: refetchCustomerInsights,
   } = useCustomerInsights({
     startDate,
     endDate,
@@ -125,11 +131,49 @@ export function DashboardPageComponent() {
   
 
   if (isLoading || isPending) {
-    return <Skeleton className="h-80 w-full" />;
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <Skeleton className="h-8 w-32" />
+          <div className="flex flex-wrap gap-2">
+            <Skeleton className="h-9 w-24" />
+            <Skeleton className="h-9 w-24" />
+            <Skeleton className="h-9 w-24" />
+          </div>
+        </div>
+
+        <SummaryCardsSkeleton />
+
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <Skeleton className="h-80 w-full" />
+          <Skeleton className="h-80 w-full" />
+        </div>
+
+        <Skeleton className="h-80 w-full" />
+      </div>
+    );
   }
 
   if (isError) {
-    return <div>Error loading dashboard data.</div>;
+    return (
+      <div role="alert" className="flex flex-col items-start gap-3 rounded-lg border p-4">
+        <p className="text-sm text-destructive">Error loading dashboard data.</p>
+        <Button
+          variant="outline"
+          onClick={() => {
+            void Promise.all([
+              refetchKpi(),
+              refetchTrend(),
+              refetchHourly(),
+              refetchWeekdayWeekend(),
+              refetchCustomerInsights(),
+            ]);
+          }}
+        >
+          Retry
+        </Button>
+      </div>
+    );
   }
 
   return (

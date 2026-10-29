@@ -110,7 +110,7 @@ export function AddSettlementDrawer({
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="w-125 overflow-y-auto">
+      <SheetContent className="w-[min(31.25rem,calc(100vw-1rem))] max-w-none overflow-y-auto">
         <SheetHeader>
           <SheetTitle>Add Settlement</SheetTitle>
 
@@ -119,7 +119,7 @@ export function AddSettlementDrawer({
           </SheetDescription>
         </SheetHeader>
 
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
